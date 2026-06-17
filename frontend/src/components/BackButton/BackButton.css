@@ -1,0 +1,25 @@
+.back-to-home {
+  text-align: center;
+  padding: 40px 20px 0;
+  background-color: #0f0f0f;
+}
+
+.back-home-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: transparent;
+  color: #d4af37;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  padding: 12px 28px;
+  border-radius: 24px;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.back-home-btn:hover {
+  background-color: rgba(212, 175, 55, 0.1);
+  border-color: #d4af37;
+}
