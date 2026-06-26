@@ -6,25 +6,14 @@ const {
   createOrder,
   updateOrder,
   deleteOrder,
-  sendOrderEmail,
 } = require("../controllers/orderController");
+const { protect } = require("../middleware/auth");
+const { validateOrder } = require("../middleware/validate");
 
-// Get all orders
-router.get("/", getAllOrders);
-
-// Get single order
-router.get("/:id", getOrderById);
-
-// Create new order
-router.post("/", createOrder);
-
-// Update order
-router.put("/:id", updateOrder);
-
-// Delete order
-router.delete("/:id", deleteOrder);
-
-// Send order to Email
-router.post("/send-email", sendOrderEmail);
+router.post("/", validateOrder, createOrder);
+router.get("/", protect, getAllOrders);
+router.get("/:id", protect, getOrderById);
+router.put("/:id", protect, updateOrder);
+router.delete("/:id", protect, deleteOrder);
 
 module.exports = router;

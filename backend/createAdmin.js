@@ -3,16 +3,25 @@ const mongoose = require("mongoose");
 const User = require("./models/User");
 
 mongoose.connect(process.env.MONGO_URI).then(async () => {
-  const existing = await User.findOne({ email: "admin@factory.com" });
-  if (existing) {
-    console.log("Admin pehle se exist karta hai!");
-  } else {
+  try {
+    // Delete old admin
+    await User.deleteMany({});
+    console.log("Old admin deleted!");
+
+    // Create new admin
     const user = new User({
-      email: "admin@factory.com",
-      password: "admin321",
+      email: "saadbinsaeed674@gmail.com",
+      password: "$tarV@nity_07",
     });
+
     await user.save();
-    console.log("Admin ban gaya!");
+    console.log("New admin created successfully!");
+    console.log("Email:", user.email);
+    console.log("Role:", user.role);
+  } catch (error) {
+    console.log("Error:", error.message);
+  } finally {
+    mongoose.disconnect();
+    console.log("Database disconnected.");
   }
-  mongoose.disconnect();
 });

@@ -21,6 +21,7 @@ function Sidebar({ isOpen, onClose }) {
     { path: "/admin/products", label: "Products", icon: "📦" },
     { path: "/admin/orders", label: "Orders", icon: "🧾" },
     { path: "/admin/messages", label: "Messages", icon: "✉️" },
+    { path: "/admin/audit-logs", label: "Audit Logs", icon: "📋" },
   ];
 
   return (

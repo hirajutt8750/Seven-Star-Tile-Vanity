@@ -2,26 +2,34 @@ import axios from "axios";
 
 const BASE_URL = "http://localhost:5000/api";
 
-// Sare orders lao
+const getToken = () => sessionStorage.getItem("adminToken");
+const authHeaders = () => ({
+  headers: { Authorization: `Bearer ${getToken()}` },
+});
+
 export const getOrders = async () => {
-  const response = await axios.get(`${BASE_URL}/orders`);
+  const response = await axios.get(`${BASE_URL}/orders`, authHeaders());
   return response.data;
 };
 
-// Single order lao
 export const getOrderById = async (id) => {
-  const response = await axios.get(`${BASE_URL}/orders/${id}`);
+  const response = await axios.get(`${BASE_URL}/orders/${id}`, authHeaders());
   return response.data;
 };
 
-// Order update karo (status change)
 export const updateOrder = async (id, orderData) => {
-  const response = await axios.put(`${BASE_URL}/orders/${id}`, orderData);
+  const response = await axios.put(
+    `${BASE_URL}/orders/${id}`,
+    orderData,
+    authHeaders(),
+  );
   return response.data;
 };
 
-// Order delete karo
 export const deleteOrder = async (id) => {
-  const response = await axios.delete(`${BASE_URL}/orders/${id}`);
+  const response = await axios.delete(
+    `${BASE_URL}/orders/${id}`,
+    authHeaders(),
+  );
   return response.data;
 };

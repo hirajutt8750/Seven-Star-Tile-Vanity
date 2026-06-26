@@ -7,20 +7,13 @@ const {
   updateProduct,
   deleteProduct,
 } = require("../controllers/productController");
+const { protect } = require("../middleware/auth");
+const { validateProduct } = require("../middleware/validate");
 
-// Get all products
 router.get("/", getAllProducts);
-
-// Get single product
 router.get("/:id", getProductById);
-
-// Create new product
-router.post("/", createProduct);
-
-// Update product
-router.put("/:id", updateProduct);
-
-// Delete product
-router.delete("/:id", deleteProduct);
+router.post("/", protect, validateProduct, createProduct);
+router.put("/:id", protect, validateProduct, updateProduct);
+router.delete("/:id", protect, deleteProduct);
 
 module.exports = router;

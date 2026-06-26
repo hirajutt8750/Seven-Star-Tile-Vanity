@@ -4,9 +4,10 @@ import "./WhatsAppButton.css";
 function WhatsAppButton() {
   const [tooltip, setTooltip] = useState(true);
 
-  const phoneNumber = "0323 7429771";
+  const phoneNumber = "923237429771";
+  //   const message =
   const message =
-    "Assalam o Alaikum! Mujhe Seven Star Tile Vanity ke products ke bare mein jaanna hai.";
+    "Hello! I would like to know more about Seven Star Tile Vanity products.";
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
   return (

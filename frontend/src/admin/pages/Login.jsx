@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -378,9 +379,9 @@ function Login() {
             </div>
 
             <div className="forgot-row">
-              <button type="button" className="forgot">
+              <Link to="/admin/forgot-password" className="forgot">
                 Forgot password?
-              </button>
+              </Link>
             </div>
 
             <button type="submit" className="submit-btn" disabled={loading}>

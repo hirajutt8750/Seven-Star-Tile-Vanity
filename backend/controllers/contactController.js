@@ -1,7 +1,7 @@
 const ContactMessage = require("../models/ContactMessage");
 const nodemailer = require("nodemailer");
+const logAction = require("../utils/auditLogger");
 
-// Email transporter
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -10,16 +10,13 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// POST — message save + email send
 const createContactMessage = async (req, res) => {
   try {
     const { name, phone, email, message } = req.body;
 
-    // MongoDB mein save
     const newMsg = new ContactMessage({ name, phone, email, message });
     await newMsg.save();
 
-    // Email bhejo
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: process.env.EMAIL_USER,
@@ -36,6 +33,15 @@ const createContactMessage = async (req, res) => {
       `,
     });
 
+    await logAction({
+      action: "MESSAGE_RECEIVED",
+      category: "other",
+      description: `New contact message from ${name} - Phone: ${phone}`,
+      performedBy: "customer",
+      ipAddress: req.ip,
+      metadata: { name, phone, email },
+    });
+
     res
       .status(201)
       .json({ success: true, message: "Message sent successfully!" });
@@ -45,7 +51,6 @@ const createContactMessage = async (req, res) => {
   }
 };
 
-// GET — sab messages (admin ke liye)
 const getAllMessages = async (req, res) => {
   try {
     const messages = await ContactMessage.find().sort({ createdAt: -1 });
@@ -57,7 +62,6 @@ const getAllMessages = async (req, res) => {
   }
 };
 
-// PUT — message read mark karo
 const markAsRead = async (req, res) => {
   try {
     const msg = await ContactMessage.findByIdAndUpdate(
@@ -71,10 +75,19 @@ const markAsRead = async (req, res) => {
   }
 };
 
-// DELETE — message delete karo
 const deleteMessage = async (req, res) => {
   try {
+    const msg = await ContactMessage.findById(req.params.id);
     await ContactMessage.findByIdAndDelete(req.params.id);
+
+    await logAction({
+      action: "MESSAGE_DELETED",
+      category: "other",
+      description: `Contact message deleted from ${msg?.name || "unknown"}`,
+      ipAddress: req.ip,
+      metadata: { messageId: req.params.id, name: msg?.name },
+    });
+
     res.status(200).json({ success: true, message: "Deleted successfully." });
   } catch (err) {
     res.status(500).json({ success: false, message: "Failed to delete." });

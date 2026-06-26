@@ -21,6 +21,9 @@ import AdminLayout from "./admin/components/AdminLayout";
 import Dashboard from "./admin/pages/Dashboard";
 import AdminProducts from "./admin/pages/Products";
 import AdminOrders from "./admin/pages/Orders";
+import ForgotPassword from "./admin/pages/ForgotPassword";
+import ResetPassword from "./admin/pages/ResetPassword";
+import AuditLogs from "./admin/pages/AuditLogs";
 
 function App() {
   return (
@@ -47,6 +50,21 @@ function App() {
               <ProtectedRoute>
                 <AdminLayout>
                   <Dashboard />
+                </AdminLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/admin/forgot-password" element={<ForgotPassword />} />
+          <Route
+            path="/admin/reset-password/:token"
+            element={<ResetPassword />}
+          />
+          <Route
+            path="/admin/audit-logs"
+            element={
+              <ProtectedRoute>
+                <AdminLayout>
+                  <AuditLogs />
                 </AdminLayout>
               </ProtectedRoute>
             }
