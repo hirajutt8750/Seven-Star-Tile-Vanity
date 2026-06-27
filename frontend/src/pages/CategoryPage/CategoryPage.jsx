@@ -14,7 +14,7 @@ function CategoryPage() {
   useEffect(() => {
     window.scrollTo(0, 0);
     fetch(
-      `http://localhost:5000/api/products?category=${encodeURIComponent(categoryName)}`,
+      `https://seven-star-tile-vanity.onrender.com/api/products?category=${encodeURIComponent(categoryName)}`,
     )
       .then((res) => res.json())
       .then((data) => {
@@ -67,7 +67,7 @@ function CategoryPage() {
                 <div className="category-card-img">
                   {product.images && product.images.length > 0 ? (
                     <img
-                      src={`http://localhost:5000${product.images[0]}`}
+                      src={`https://seven-star-tile-vanity.onrender.com${product.images[0]}`}
                       alt={product.name}
                     />
                   ) : (

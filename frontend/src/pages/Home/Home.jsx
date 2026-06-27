@@ -90,7 +90,7 @@ function Home() {
   }, [categories]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/categories")
+    fetch("https://seven-star-tile-vanity.onrender.com/api/categories")
       .then((r) => r.json())
       .then((d) => {
         setCategories(d);
@@ -128,7 +128,7 @@ function Home() {
                 <div className="h-prod-img">
                   {cat.image ? (
                     <img
-                      src={`http://localhost:5000${cat.image}`}
+                      src={`https://seven-star-tile-vanity.onrender.com${cat.image}`}
                       alt={cat.name}
                     />
                   ) : (

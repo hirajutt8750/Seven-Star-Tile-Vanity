@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-const BASE_URL = "http://localhost:5000/api";
+const BASE_URL = "https://seven-star-tile-vanity.onrender.com/api";
 const getToken = () => sessionStorage.getItem("adminToken");
 
 function TwoFactorSetup() {

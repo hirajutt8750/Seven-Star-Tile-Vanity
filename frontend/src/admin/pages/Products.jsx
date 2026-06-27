@@ -61,7 +61,10 @@ function Products() {
     for (let file of files) {
       const data = new FormData();
       data.append("image", file);
-      const res = await axios.post("http://localhost:5000/api/upload", data);
+      const res = await axios.post(
+        "https://seven-star-tile-vanity.onrender.com/api/upload",
+        data,
+      );
       uploadedUrls.push(res.data.imageUrl);
     }
     setImages([...images, ...uploadedUrls]);
@@ -435,7 +438,7 @@ function Products() {
                 {images.map((img, index) => (
                   <div key={index} style={{ position: "relative" }}>
                     <img
-                      src={`http://localhost:5000${img}`}
+                      src={`https://seven-star-tile-vanity.onrender.com${img}`}
                       alt=""
                       style={{
                         width: "80px",
@@ -562,7 +565,7 @@ function Products() {
                 <td style={{ padding: "12px" }}>
                   {product.images && product.images[0] ? (
                     <img
-                      src={`http://localhost:5000${product.images[0]}`}
+                      src={`https://seven-star-tile-vanity.onrender.com${product.images[0]}`}
                       alt=""
                       style={{
                         width: "50px",
@@ -657,7 +660,7 @@ function Products() {
             {product.images && product.images[0] ? (
               <img
                 className="product-card-thumb"
-                src={`http://localhost:5000${product.images[0]}`}
+                src={`https://seven-star-tile-vanity.onrender.com${product.images[0]}`}
                 alt=""
               />
             ) : (

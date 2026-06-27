@@ -207,15 +207,18 @@ function Orders() {
     const pdfBase64 = doc.output("datauristring").split(",")[1];
 
     try {
-      const res = await fetch("http://localhost:5000/api/orders/send-email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          orderId: order._id,
-          pdfBase64,
-          customerEmail: emailTo,
-        }),
-      });
+      const res = await fetch(
+        "https://seven-star-tile-vanity.onrender.com/api/orders/send-email",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            orderId: order._id,
+            pdfBase64,
+            customerEmail: emailTo,
+          }),
+        },
+      );
 
       const data = await res.json();
       if (data.success) {

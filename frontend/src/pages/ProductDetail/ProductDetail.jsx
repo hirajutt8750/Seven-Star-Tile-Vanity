@@ -17,7 +17,7 @@ function ProductDetail() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    fetch(`http://localhost:5000/api/products/${id}`)
+    fetch(`https://seven-star-tile-vanity.onrender.com/api/products/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setProduct(data);
@@ -49,7 +49,7 @@ function ProductDetail() {
           isCustom: product.isCustom,
           image:
             product.images && product.images.length > 0
-              ? `http://localhost:5000${product.images[0]}`
+              ? `https://seven-star-tile-vanity.onrender.com${product.images[0]}`
               : null,
         },
       },
@@ -102,7 +102,10 @@ function ProductDetail() {
                   className={`detail-thumb ${i === currentImage ? "active" : ""}`}
                   onClick={() => setCurrentImage(i)}
                 >
-                  <img src={`http://localhost:5000${img}`} alt="" />
+                  <img
+                    src={`https://seven-star-tile-vanity.onrender.com${img}`}
+                    alt=""
+                  />
                 </div>
               ))}
           </div>
@@ -112,7 +115,7 @@ function ProductDetail() {
             {product.images && product.images.length > 0 ? (
               <>
                 <img
-                  src={`http://localhost:5000${product.images[currentImage]}`}
+                  src={`https://seven-star-tile-vanity.onrender.com${product.images[currentImage]}`}
                   alt={product.name}
                 />
                 {product.images.length > 1 && (
@@ -260,7 +263,7 @@ function RelatedProducts({ category, currentId }) {
 
   useEffect(() => {
     fetch(
-      `http://localhost:5000/api/products?category=${encodeURIComponent(category)}`,
+      `https://seven-star-tile-vanity.onrender.com/api/products?category=${encodeURIComponent(category)}`,
     )
       .then((res) => res.json())
       .then((data) => {
@@ -283,7 +286,7 @@ function RelatedProducts({ category, currentId }) {
             <div className="related-img">
               {product.images && product.images[0] ? (
                 <img
-                  src={`http://localhost:5000${product.images[0]}`}
+                  src={`https://seven-star-tile-vanity.onrender.com${product.images[0]}`}
                   alt={product.name}
                 />
               ) : (

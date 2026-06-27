@@ -17,7 +17,7 @@ function Products() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/products")
+    fetch("https://seven-star-tile-vanity.onrender.com/api/products")
       .then((res) => res.json())
       .then((data) => {
         setProducts(data);
@@ -53,7 +53,7 @@ function Products() {
   const handleBuyNow = (product, currentIndex) => {
     const hasImages = product.images && product.images.length > 0;
     const imageUrl = hasImages
-      ? `http://localhost:5000${product.images[currentIndex]}`
+      ? `https://seven-star-tile-vanity.onrender.com${product.images[currentIndex]}`
       : null;
 
     navigate("/order", {
@@ -145,7 +145,7 @@ function Products() {
                 >
                   {hasImages ? (
                     <img
-                      src={`http://localhost:5000${product.images[currentIndex]}`}
+                      src={`https://seven-star-tile-vanity.onrender.com${product.images[currentIndex]}`}
                       alt={product.name}
                     />
                   ) : (

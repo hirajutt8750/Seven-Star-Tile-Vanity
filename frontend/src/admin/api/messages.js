@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:5000/api/contact";
+const BASE_URL = "https://seven-star-tile-vanity.onrender.com/api/contact";
 
 export const getMessages = async () => {
   const res = await fetch(BASE_URL);

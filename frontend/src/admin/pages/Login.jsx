@@ -17,10 +17,13 @@ function Login() {
     setLoading(true);
     setMessage("");
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", {
-        email,
-        password,
-      });
+      const res = await axios.post(
+        "https://seven-star-tile-vanity.onrender.com/api/auth/login",
+        {
+          email,
+          password,
+        },
+      );
 
       if (res.data.require2FA) {
         setTempToken(res.data.tempToken);
@@ -44,7 +47,7 @@ function Login() {
     setMessage("");
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/auth/verify-2fa",
+        "https://seven-star-tile-vanity.onrender.com/api/auth/verify-2fa",
         {
           tempToken,
           code: twoFACode,

@@ -18,7 +18,9 @@ function Categories() {
   }, []);
 
   const loadCategories = async () => {
-    const res = await axios.get("http://localhost:5000/api/categories");
+    const res = await axios.get(
+      "https://seven-star-tile-vanity.onrender.com/api/categories",
+    );
     setCategories(res.data);
   };
 
@@ -27,7 +29,10 @@ function Categories() {
     setUploading(true);
     const data = new FormData();
     data.append("image", file);
-    const res = await axios.post("http://localhost:5000/api/upload", data);
+    const res = await axios.post(
+      "https://seven-star-tile-vanity.onrender.com/api/upload",
+      data,
+    );
     setImage(res.data.imageUrl);
     setFormData((prev) => ({ ...prev, image: res.data.imageUrl }));
     setUploading(false);
@@ -37,11 +42,14 @@ function Categories() {
     e.preventDefault();
     if (editCategory) {
       await axios.put(
-        `http://localhost:5000/api/categories/${editCategory._id}`,
+        `https://seven-star-tile-vanity.onrender.com/api/categories/${editCategory._id}`,
         formData,
       );
     } else {
-      await axios.post("http://localhost:5000/api/categories", formData);
+      await axios.post(
+        "https://seven-star-tile-vanity.onrender.com/api/categories",
+        formData,
+      );
     }
     resetForm();
     loadCategories();
@@ -60,7 +68,9 @@ function Categories() {
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this category?")) {
-      await axios.delete(`http://localhost:5000/api/categories/${id}`);
+      await axios.delete(
+        `https://seven-star-tile-vanity.onrender.com/api/categories/${id}`,
+      );
       loadCategories();
     }
   };
@@ -380,7 +390,7 @@ function Categories() {
               )}
               {image && (
                 <img
-                  src={`http://localhost:5000${image}`}
+                  src={`https://seven-star-tile-vanity.onrender.com${image}`}
                   alt="preview"
                   style={{
                     width: "100px",
@@ -442,7 +452,7 @@ function Categories() {
               >
                 {category.image ? (
                   <img
-                    src={`http://localhost:5000${category.image}`}
+                    src={`https://seven-star-tile-vanity.onrender.com${category.image}`}
                     alt={category.name}
                     style={{
                       width: "100%",

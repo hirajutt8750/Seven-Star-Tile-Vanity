@@ -192,11 +192,14 @@ function OrderForm() {
     };
 
     try {
-      const res = await fetch("http://localhost:5000/api/orders", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(orderData),
-      });
+      const res = await fetch(
+        "https://seven-star-tile-vanity.onrender.com/api/orders",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(orderData),
+        },
+      );
 
       if (!res.ok) throw new Error("Order submit failed");
 
