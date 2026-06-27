@@ -24,6 +24,7 @@ import AdminOrders from "./admin/pages/Orders";
 import ForgotPassword from "./admin/pages/ForgotPassword";
 import ResetPassword from "./admin/pages/ResetPassword";
 import AuditLogs from "./admin/pages/AuditLogs";
+import TwoFactorSetup from "./admin/pages/TwoFactorSetup";
 
 function App() {
   return (
@@ -65,6 +66,16 @@ function App() {
               <ProtectedRoute>
                 <AdminLayout>
                   <AuditLogs />
+                </AdminLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/2fa-setup"
+            element={
+              <ProtectedRoute>
+                <AdminLayout>
+                  <TwoFactorSetup />
                 </AdminLayout>
               </ProtectedRoute>
             }

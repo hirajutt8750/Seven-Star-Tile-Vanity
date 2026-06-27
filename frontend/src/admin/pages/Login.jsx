@@ -8,6 +8,9 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [step, setStep] = useState(1);
+  const [tempToken, setTempToken] = useState("");
+  const [twoFACode, setTwoFACode] = useState("");
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -18,11 +21,42 @@ function Login() {
         email,
         password,
       });
+
+      if (res.data.require2FA) {
+        setTempToken(res.data.tempToken);
+        setStep(2);
+        setMessage("");
+      } else {
+        sessionStorage.setItem("adminToken", res.data.token);
+        setMessage("success:Login successful!");
+        window.location.href = "/admin";
+      }
+    } catch (error) {
+      setMessage("error:Incorrect email or password!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handle2FAVerify = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage("");
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/auth/verify-2fa",
+        {
+          tempToken,
+          code: twoFACode,
+        },
+      );
       sessionStorage.setItem("adminToken", res.data.token);
       setMessage("success:Login successful!");
       window.location.href = "/admin";
     } catch (error) {
-      setMessage("error:Incorrect email or password!");
+      setMessage(
+        "error:" + (error.response?.data?.message || "Invalid 2FA code."),
+      );
     } finally {
       setLoading(false);
     }
@@ -232,6 +266,7 @@ function Login() {
           font-size: 11px; color: rgba(0,200,255,0.4);
           cursor: pointer; transition: color 0.2s;
           background: none; border: none; font-family: inherit;
+          text-decoration: none;
         }
         .forgot:hover { color: #00e5ff; }
 
@@ -281,6 +316,48 @@ function Login() {
           display: inline-block; vertical-align: middle; margin-right: 8px;
         }
 
+        .twofa-box {
+          background: rgba(0,229,255,0.05);
+          border: 1px solid rgba(0,229,255,0.15);
+          border-radius: 12px;
+          padding: 20px;
+          margin-bottom: 20px;
+          text-align: center;
+        }
+        .twofa-code-input {
+          display: block; width: 100%;
+          background: rgba(0,160,255,0.05);
+          border: 1px solid rgba(0,160,255,0.15);
+          border-radius: 11px;
+          padding: 16px;
+          font-size: 28px;
+          color: #00e5ff;
+          font-family: monospace;
+          letter-spacing: 12px;
+          text-align: center;
+          outline: none;
+          transition: all 0.22s;
+          box-sizing: border-box;
+          margin-bottom: 16px;
+        }
+        .twofa-code-input:focus {
+          border-color: rgba(0,200,255,0.55);
+          background: rgba(0,200,255,0.07);
+          box-shadow: 0 0 0 3px rgba(0,200,255,0.08);
+        }
+        .back-btn {
+          background: none; border: none;
+          color: rgba(0,200,255,0.4);
+          font-size: 12px; cursor: pointer;
+          font-family: inherit;
+          transition: color 0.2s;
+          margin-top: 12px;
+          display: block;
+          width: 100%;
+          text-align: center;
+        }
+        .back-btn:hover { color: #00e5ff; }
+
         .bottom-rule {
           height: 1px;
           background: rgba(0,180,255,0.08);
@@ -308,7 +385,7 @@ function Login() {
       <div className="bg-glow-bl" />
 
       <div className="split">
-        {/* ── LEFT PANEL ── */}
+        {/* LEFT PANEL */}
         <div className="left">
           <div className="left-glow-t" />
           <div className="left-glow-b" />
@@ -327,74 +404,151 @@ function Login() {
           </p>
         </div>
 
-        {/* ── RIGHT PANEL ── */}
+        {/* RIGHT PANEL */}
         <div className="right">
-          <div className="form-eyebrow">Admin Access</div>
-          <div className="form-title">Welcome back</div>
-          <div className="form-sub">Sign in to your control panel</div>
+          {/* STEP 1: Email + Password */}
+          {step === 1 && (
+            <>
+              <div className="form-eyebrow">Admin Access</div>
+              <div className="form-title">Welcome back</div>
+              <div className="form-sub">Sign in to your control panel</div>
 
-          {message && (
-            <div className={`msg-box ${isSuccess ? "success" : "error"}`}>
-              <span>{isSuccess ? "✓" : "⚠"}</span>
-              {displayMsg}
-            </div>
+              {message && (
+                <div className={`msg-box ${isSuccess ? "success" : "error"}`}>
+                  <span>{isSuccess ? "✓" : "⚠"}</span>
+                  {displayMsg}
+                </div>
+              )}
+
+              <form onSubmit={handleLogin}>
+                <div className="f-lbl">Email Address</div>
+                <div className="inp-wrap">
+                  <span className="inp-icon">✉</span>
+                  <input
+                    className="inp-field"
+                    type="email"
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    autoComplete="off"
+                  />
+                </div>
+
+                <div className="f-lbl">Password</div>
+                <div className="inp-wrap">
+                  <span className="inp-icon">🔑</span>
+                  <input
+                    className="inp-field"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    autoComplete="new-password"
+                    style={{ paddingRight: "42px" }}
+                  />
+                  <button
+                    type="button"
+                    className="eye-btn"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? "🙈" : "👁️"}
+                  </button>
+                </div>
+
+                <div className="forgot-row">
+                  <Link to="/admin/forgot-password" className="forgot">
+                    Forgot password?
+                  </Link>
+                </div>
+
+                <button type="submit" className="submit-btn" disabled={loading}>
+                  {loading ? (
+                    <>
+                      <span className="spinner" />
+                      Signing in...
+                    </>
+                  ) : (
+                    "Sign In →"
+                  )}
+                </button>
+              </form>
+            </>
           )}
 
-          <form onSubmit={handleLogin}>
-            <div className="f-lbl">Email Address</div>
-            <div className="inp-wrap">
-              <span className="inp-icon">✉</span>
-              <input
-                className="inp-field"
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                autoComplete="off"
-              />
-            </div>
+          {/* STEP 2: 2FA Code */}
+          {step === 2 && (
+            <>
+              <div className="form-eyebrow">Security Check</div>
+              <div className="form-title">2FA Verification</div>
+              <div className="form-sub">
+                Enter the code from Google Authenticator
+              </div>
 
-            <div className="f-lbl">Password</div>
-            <div className="inp-wrap">
-              <span className="inp-icon">🔑</span>
-              <input
-                className="inp-field"
-                type={showPassword ? "text" : "password"}
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                autoComplete="new-password"
-                style={{ paddingRight: "42px" }}
-              />
-              <button
-                type="button"
-                className="eye-btn"
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label="Toggle password"
-              >
-                {showPassword ? "🙈" : "👁️"}
-              </button>
-            </div>
-
-            <div className="forgot-row">
-              <Link to="/admin/forgot-password" className="forgot">
-                Forgot password?
-              </Link>
-            </div>
-
-            <button type="submit" className="submit-btn" disabled={loading}>
-              {loading ? (
-                <>
-                  <span className="spinner" />
-                  Signing in...
-                </>
-              ) : (
-                "Sign In →"
+              {message && (
+                <div className={`msg-box ${isSuccess ? "success" : "error"}`}>
+                  <span>{isSuccess ? "✓" : "⚠"}</span>
+                  {displayMsg}
+                </div>
               )}
-            </button>
-          </form>
+
+              <div className="twofa-box">
+                <div style={{ fontSize: "36px", marginBottom: "8px" }}>🔐</div>
+                <p
+                  style={{
+                    color: "rgba(255,255,255,0.5)",
+                    fontSize: "12px",
+                    margin: 0,
+                  }}
+                >
+                  Open Google Authenticator and enter the 6-digit code
+                </p>
+              </div>
+
+              <form onSubmit={handle2FAVerify}>
+                <div className="f-lbl">Authenticator Code</div>
+                <input
+                  className="twofa-code-input"
+                  type="text"
+                  placeholder="000000"
+                  value={twoFACode}
+                  onChange={(e) =>
+                    setTwoFACode(e.target.value.replace(/\D/g, "").slice(0, 6))
+                  }
+                  maxLength={6}
+                  autoFocus
+                />
+
+                <button
+                  type="submit"
+                  className="submit-btn"
+                  disabled={loading || twoFACode.length !== 6}
+                >
+                  {loading ? (
+                    <>
+                      <span className="spinner" />
+                      Verifying...
+                    </>
+                  ) : (
+                    "Verify & Login →"
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  className="back-btn"
+                  onClick={() => {
+                    setStep(1);
+                    setTwoFACode("");
+                    setMessage("");
+                  }}
+                >
+                  ← Back to Login
+                </button>
+              </form>
+            </>
+          )}
 
           <div className="bottom-rule" />
           <div className="footer-txt">
