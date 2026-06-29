@@ -253,7 +253,7 @@ function Terms() {
                 <h3>Contact Us</h3>
                 <p>
                   For any privacy-related queries, please contact us on
-                  WhatsApp: <strong>03XX-XXXXXXX</strong>
+                  WhatsApp: <strong>0323 7429771</strong>
                 </p>
               </div>
             </div>
@@ -363,7 +363,7 @@ function Terms() {
               <div className="p-section-body">
                 <h3>Contact for Returns</h3>
                 <p>
-                  WhatsApp: <strong>03XX-XXXXXXX</strong>
+                  WhatsApp: <strong>0323 7429771</strong>
                 </p>
                 <p>Business Hours: Monday – Saturday, 9am – 7pm</p>
               </div>
