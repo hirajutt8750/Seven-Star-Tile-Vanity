@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
@@ -76,6 +77,16 @@ function ProductDetail() {
 
   return (
     <div className="detail-page">
+      <Helmet>
+        <title>{product.name} | Seven Star Tile Vanity</title>
+        <meta
+          name="description"
+          content={
+            product.description ||
+            `${product.name} – ${product.category} vanity. Premium quality, factory-direct, custom sizes available at Seven Star Tile Vanity.`
+          }
+        />
+      </Helmet>
       <Navbar />
 
       {/* Breadcrumb */}

@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import { Helmet } from "react-helmet-async";
 import { Link, useLocation } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import Navbar from "../../components/Navbar/Navbar";
@@ -237,6 +238,13 @@ function OrderForm() {
 
   return (
     <div style={{ backgroundColor: "#0F0F0F", minHeight: "100vh" }}>
+      <Helmet>
+        <title>Place Your Order | Seven Star Tile Vanity</title>
+        <meta
+          name="description"
+          content="Order custom vanities and tiles from Seven Star Tile Vanity. Choose size, color, finish and delivery details — factory-direct quality."
+        />
+      </Helmet>
       <Navbar />
       <div className="order-page">
         <div className="order-hero-right">

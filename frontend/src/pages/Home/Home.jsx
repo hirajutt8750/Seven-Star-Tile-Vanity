@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Hero from "../../components/Hero/Hero";
@@ -101,6 +102,15 @@ function Home() {
 
   return (
     <div className="home">
+      <Helmet>
+        <title>
+          Seven Star Tile Vanity | Premium Tile & Vanity Manufacturer Pakistan
+        </title>
+        <meta
+          name="description"
+          content="Seven Star Tile Vanity – Pakistan's trusted factory-direct tile and vanity manufacturer. Custom sizes, premium quality designs, and nationwide delivery worldwide."
+        />
+      </Helmet>
       <Navbar />
 
       <div className="home-hero-wrap">

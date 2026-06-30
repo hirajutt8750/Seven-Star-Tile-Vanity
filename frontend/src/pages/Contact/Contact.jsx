@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import Navbar from "../../components/Navbar/Navbar";
 import BackButton from "../../components/BackButton/BackButton";
 import Footer from "../../components/Footer/Footer";
@@ -53,6 +54,13 @@ function Contact() {
 
   return (
     <div>
+      <Helmet>
+        <title>Contact Us | Seven Star Tile Vanity</title>
+        <meta
+          name="description"
+          content="Get in touch with Seven Star Tile Vanity for orders, pricing, and custom designs. WhatsApp, call or email us — based in Gujranwala, Pakistan, serving worldwide."
+        />
+      </Helmet>
       <Navbar />
 
       {/* HERO SECTION */}

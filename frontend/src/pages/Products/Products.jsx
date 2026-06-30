@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import Navbar from "../../components/Navbar/Navbar";
@@ -37,7 +38,7 @@ function Products() {
   const handleAddToCart = (product) => {
     if (product.isCustom) {
       window.open(
-        "https://wa.me/923XXXXXXXXX?text=" + encodeURIComponent("Custom Order"),
+        "https://wa.me/923237429771?text=" + encodeURIComponent("Custom Order"),
         "_blank",
       );
       return;
@@ -97,7 +98,7 @@ function Products() {
             color: "#d4af37",
           }}
         >
-          Products load ho rahe hain...
+          Products are loading...
         </div>
       </div>
     );
@@ -105,6 +106,13 @@ function Products() {
 
   return (
     <div>
+      <Helmet>
+        <title>Vanity Products Collection | Seven Star Tile Vanity</title>
+        <meta
+          name="description"
+          content="Browse our premium vanity collection — custom sizes, finishes and designs. Factory-direct quality with worldwide shipping available."
+        />
+      </Helmet>
       <Navbar />
 
       <div className="products-hero">
@@ -113,7 +121,8 @@ function Products() {
           Premium Vanity <span>Collection</span>
         </h1>
         <p>
-          Direct factory se — best quality, best price. Custom size available.
+          Factory Direct • Premium Quality • Best Prices Custom Sizes Crafted
+          Just for You
         </p>
       </div>
 

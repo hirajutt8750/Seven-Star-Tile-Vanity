@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import BackButton from "../../components/BackButton/BackButton";
@@ -108,6 +109,13 @@ function About() {
 
   return (
     <div className="about-page">
+      <Helmet>
+        <title>About Us | Seven Star Tile Vanity – Gujranwala, Pakistan</title>
+        <meta
+          name="description"
+          content="7 Star Tile Vanity, based in Gujranwala, Pakistan since 2019. Premium quality, factory-direct vanity and tile manufacturer serving customers worldwide."
+        />
+      </Helmet>
       <Navbar />
 
       {/* ── HERO ─────────────────────────────────────── */}
