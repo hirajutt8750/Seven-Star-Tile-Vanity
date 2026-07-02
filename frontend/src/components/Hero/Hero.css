@@ -64,7 +64,7 @@
   gap: 60px;
   position: relative;
   overflow: hidden;
-  min-height: calc(100vh - 130px);
+  min-height: 100vh;
 }
 
 /* Dark luxury background */
