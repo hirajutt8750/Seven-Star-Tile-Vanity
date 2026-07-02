@@ -364,7 +364,7 @@
 }
 
 .hero-btn-secondary:hover {
-  color: #080808;
+  color: #000000;
   transform: translateY(-3px);
   box-shadow: 0 8px 25px rgba(212, 175, 55, 0.2);
   border-color: transparent;
