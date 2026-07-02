@@ -248,8 +248,11 @@ function OrderForm() {
       <Navbar />
       <div className="order-page">
         <div className="order-hero-right">
-          <h1>Place Your Order</h1>
-          <p>Fill the form below and we will contact you shortly.</p>
+          <h1>Let's Bring Your Vision to Lifer</h1>
+          <p>
+            Fill out the form below,and our team will get in touch with you
+            shortly.
+          </p>
         </div>
         <div className="order-container">
           <form onSubmit={handleSubmit} className="order-form" noValidate>
