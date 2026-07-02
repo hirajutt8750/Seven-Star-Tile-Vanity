@@ -360,12 +360,7 @@
   background: linear-gradient(135deg, #d4af37, #b8962e);
   transform: translateX(-101%);
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  z-index: 0;
-}
-
-.hero-btn-secondary span {
-  position: relative;
-  z-index: 1;
+  z-index: -1;
 }
 
 .hero-btn-secondary:hover {
