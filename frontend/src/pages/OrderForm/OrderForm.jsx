@@ -248,9 +248,9 @@ function OrderForm() {
       <Navbar />
       <div className="order-page">
         <div className="order-hero-right">
-          <h1>Let's Bring Your Vision to Lifer</h1>
+          <h1>Let's Bring Your Vision to Life</h1>
           <p>
-            Fill out the form below,and our team will get in touch with you
+            Fill out the form below, and our team will get in touch with you
             shortly.
           </p>
         </div>
