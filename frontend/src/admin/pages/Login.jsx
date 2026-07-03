@@ -35,7 +35,14 @@ function Login() {
         window.location.href = "/admin";
       }
     } catch (error) {
-      setMessage("error:Incorrect email or password!");
+      console.error("Login error:", error);
+      console.error("Error response:", error.response);
+      setMessage(
+        "error:" +
+          (error.response?.data?.message ||
+            error.message ||
+            "Incorrect email or password!"),
+      );
     } finally {
       setLoading(false);
     }
@@ -57,8 +64,13 @@ function Login() {
       setMessage("success:Login successful!");
       window.location.href = "/admin";
     } catch (error) {
+      console.error("2FA error:", error);
+      console.error("Error response:", error.response);
       setMessage(
-        "error:" + (error.response?.data?.message || "Invalid 2FA code."),
+        "error:" +
+          (error.response?.data?.message ||
+            error.message ||
+            "Invalid 2FA code."),
       );
     } finally {
       setLoading(false);
