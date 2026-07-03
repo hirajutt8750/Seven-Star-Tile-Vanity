@@ -35,14 +35,7 @@ function Login() {
         window.location.href = "/admin";
       }
     } catch (error) {
-      console.error("Login error:", error);
-      console.error("Error response:", error.response);
-      setMessage(
-        "error:" +
-          (error.response?.data?.message ||
-            error.message ||
-            "Incorrect email or password!"),
-      );
+      setMessage("error:Incorrect email or password!");
     } finally {
       setLoading(false);
     }
@@ -64,13 +57,8 @@ function Login() {
       setMessage("success:Login successful!");
       window.location.href = "/admin";
     } catch (error) {
-      console.error("2FA error:", error);
-      console.error("Error response:", error.response);
       setMessage(
-        "error:" +
-          (error.response?.data?.message ||
-            error.message ||
-            "Invalid 2FA code."),
+        "error:" + (error.response?.data?.message || "Invalid 2FA code."),
       );
     } finally {
       setLoading(false);
@@ -221,6 +209,20 @@ function Login() {
           position: absolute; top: 0; left: 0; right: 0; height: 3px;
           background: linear-gradient(90deg, transparent, #00aaff, #00e5ff, transparent);
         }
+
+        .back-link {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 12px;
+          font-weight: 600;
+          color: rgba(0,200,255,0.5);
+          text-decoration: none;
+          margin-bottom: 24px;
+          transition: color 0.2s;
+          width: fit-content;
+        }
+        .back-link:hover { color: #00e5ff; }
 
         .form-eyebrow {
           font-size: 10px; font-weight: 700;
@@ -421,6 +423,10 @@ function Login() {
 
         {/* RIGHT PANEL */}
         <div className="right">
+          <Link to="/" className="back-link">
+            ← Back to Website
+          </Link>
+
           {/* STEP 1: Email + Password */}
           {step === 1 && (
             <>
