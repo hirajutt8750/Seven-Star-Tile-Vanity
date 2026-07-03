@@ -11,7 +11,7 @@ mongoose.connect(process.env.MONGO_URI).then(async () => {
     // Create new admin
     const user = new User({
       email: "saadbinsaeed674@gmail.com",
-      password: "$tarV@nity_07",
+      password: "$tarv@nitY_05",
     });
 
     await user.save();
