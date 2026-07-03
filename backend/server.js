@@ -37,6 +37,8 @@ app.use("/api/auth/", authLimiter);
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:3000",
+  "https://7startilevanity.com",
+  "https://www.7startilevanity.com",
   process.env.FRONTEND_URL,
 ].filter(Boolean);
 
