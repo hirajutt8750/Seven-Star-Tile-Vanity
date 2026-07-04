@@ -50,12 +50,9 @@ function Products() {
     }, 2000);
   };
 
-  // ── Buy Now — passes the exact product + currently shown image ──
   const handleBuyNow = (product, currentIndex) => {
     const hasImages = product.images && product.images.length > 0;
-    const imageUrl = hasImages
-      ? `https://seven-star-tile-vanity.onrender.com${product.images[currentIndex]}`
-      : null;
+    const imageUrl = hasImages ? product.images[currentIndex] : null;
 
     navigate("/order", {
       state: {
@@ -66,7 +63,7 @@ function Products() {
           finish: product.finish,
           color: product.color,
           price: product.price,
-          image: imageUrl, // ✅ the image the user was viewing
+          image: imageUrl,
         },
       },
     });
@@ -147,21 +144,19 @@ function Products() {
 
             return (
               <div key={product._id} className="product-card">
-                {/* Image Container */}
                 <div
                   className="product-img"
                   style={{ backgroundColor: "#1a1a1a" }}
                 >
                   {hasImages ? (
                     <img
-                      src={`https://seven-star-tile-vanity.onrender.com${product.images[currentIndex]}`}
+                      src={product.images[currentIndex]}
                       alt={product.name}
                     />
                   ) : (
                     <span style={{ fontSize: "64px" }}>🎨</span>
                   )}
 
-                  {/* Arrows */}
                   {product.images && product.images.length > 1 && (
                     <>
                       <button
@@ -209,7 +204,6 @@ function Products() {
                         ›
                       </button>
 
-                      {/* Dots */}
                       <div
                         style={{
                           position: "absolute",
@@ -251,7 +245,6 @@ function Products() {
                   )}
                 </div>
 
-                {/* Product Body */}
                 <div className="product-body">
                   <div className="product-meta">
                     <span className="product-category">{product.category}</span>
@@ -276,10 +269,12 @@ function Products() {
                   <div className="product-btn-row">
                     {product.isCustom ? (
                       <a
-                        href="https://wa.me/923XXXXXXXXX"
+                        href={`https://wa.me/923237429771?text=${encodeURIComponent(
+                          `Hello, I am interested in ${product.name}`,
+                        )}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="product-whatsapp-btn"
+                        className="category-whatsapp-btn"
                       >
                         💬 WhatsApp Us
                       </a>
@@ -293,8 +288,6 @@ function Products() {
                         >
                           {added[product._id] ? "✓ Added!" : "Add to Cart"}
                         </button>
-
-                        {/* ✅ Buy Now now passes the exact product + image */}
                         <button
                           className="product-buy-btn"
                           onClick={() => handleBuyNow(product, currentIndex)}

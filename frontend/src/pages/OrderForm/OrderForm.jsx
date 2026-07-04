@@ -79,18 +79,15 @@ function OrderForm() {
     urgency: "normal",
   });
 
-  // Track selected country for each phone field
   const [phoneCountry, setPhoneCountry] = useState(DEFAULT_COUNTRY);
   const [altPhoneCountry, setAltPhoneCountry] = useState(DEFAULT_COUNTRY);
 
   const [errors, setErrors] = useState({});
   const [customImages, setCustomImages] = useState([]);
-  const [submitted, setSubmitted] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // Handle PhoneInput changes (they carry _country)
     if (name === "phone") {
       if (e.target._country) setPhoneCountry(e.target._country);
       setFormData((prev) => ({ ...prev, phone: value }));
@@ -133,7 +130,6 @@ function OrderForm() {
     const newErrors = {};
     if (!formData.fullName.trim()) newErrors.fullName = true;
 
-    // Phone validation — per country
     if (!formData.phone.trim()) {
       newErrors.phone = "required";
     } else if (
@@ -143,7 +139,6 @@ function OrderForm() {
       newErrors.phone = "length";
     }
 
-    // Alt Phone validation — per country
     if (!formData.altPhone.trim()) {
       newErrors.altPhone = "required";
     } else if (
@@ -205,36 +200,62 @@ function OrderForm() {
       if (!res.ok) throw new Error("Order submit failed");
 
       await res.json();
-      setSubmitted(true);
       clearCart();
+
+      // WhatsApp redirect with order details
+      const cartSummary =
+        cartItems.length > 0
+          ? cartItems
+              .map(
+                (item) =>
+                  `  - ${item.name} x${item.quantity} = Rs. ${(
+                    item.price * item.quantity
+                  ).toLocaleString()}`,
+              )
+              .join("\n")
+          : "  - No cart items";
+
+      const whatsappMessage = `
+🛒 *New Order Request - 7Star Tile Vanity*
+
+👤 *Customer Details:*
+  Name: ${formData.fullName}
+  Phone: ${fullPhone}
+  Alt Phone: ${fullAltPhone || "N/A"}
+  City: ${formData.city}
+  Address: ${formData.address}
+
+📦 *Product Details:*
+  Type: ${formData.productType || "N/A"}
+  Category: ${formData.category || "N/A"}
+  Size: ${formData.size || "N/A"}
+  Color: ${formData.color || "N/A"}
+  Finish: ${formData.finish || "N/A"}
+  Design: ${formData.design || "N/A"}
+  Quantity: ${formData.quantity || "N/A"}
+
+🛍️ *Cart Items:*
+${cartSummary}
+  Total: Rs. ${(totalPrice || 0).toLocaleString()}
+
+🚚 *Delivery Details:*
+  Method: ${formData.deliveryMethod === "home" ? "Home Delivery" : "Factory Pickup"}
+  ${formData.deliveryMethod === "home" ? `Delivery Address: ${formData.deliveryAddress}` : ""}
+  Required Date: ${formData.deliveryDate}
+  Urgency: ${formData.urgency === "urgent" ? "URGENT ⚡" : "Normal"}
+
+📝 *Special Notes:* ${formData.specialNotes || "None"}
+      `.trim();
+
+      const adminNumber = "923237429771";
+      const whatsappUrl = `https://wa.me/${adminNumber}?text=${encodeURIComponent(whatsappMessage)}`;
+
+      window.location.href = whatsappUrl;
     } catch (err) {
       console.error(err);
       alert("Order submit failed, please try again.");
     }
   };
-
-  if (submitted) {
-    return (
-      <div style={{ backgroundColor: "#0F0F0F", minHeight: "100vh" }}>
-        <Navbar />
-        <div className="order-success">
-          <div className="success-box">
-            <span className="success-icon">✅</span>
-            <h2>Order Request Submitted!</h2>
-            <p>We will contact you shortly to confirm your order</p>
-            <p className="success-note">
-              Final price and payment will be confirmed on call
-            </p>
-            <Link to="/" className="success-home-btn">
-              ← Back to Home
-            </Link>
-          </div>
-        </div>
-        <Footer />
-        <WhatsAppButton />
-      </div>
-    );
-  }
 
   return (
     <div style={{ backgroundColor: "#0F0F0F", minHeight: "100vh" }}>
@@ -777,8 +798,9 @@ function OrderForm() {
               <div>
                 <strong>Important Note</strong>
                 <p>
-                  After submitting the order, we will contact you on call. Final
-                  price and advance payment will be confirmed on call.
+                  After submitting your order, you will be redirected to
+                  WhatsApp. Please send the pre-filled message to confirm your
+                  order.
                 </p>
               </div>
             </div>
@@ -792,7 +814,7 @@ function OrderForm() {
               <div className="whatsapp-help-text">
                 <p>Need Help? Contact us on WhatsApp</p>
                 <a
-                  href="https://wa.me/923XXXXXXXXX"
+                  href="https://wa.me/923237429771"
                   target="_blank"
                   rel="noopener noreferrer"
                 >

@@ -48,7 +48,7 @@ function Cart() {
                 <div className="cart-item-img">
                   {item.images && item.images.length > 0 ? (
                     <img
-                      src={`https://seven-star-tile-vanity.onrender.com${item.images[0]}`}
+                      src={item.images[0]}
                       alt={item.name}
                       style={{
                         width: "100%",

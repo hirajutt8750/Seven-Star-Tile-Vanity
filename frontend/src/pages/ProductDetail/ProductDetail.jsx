@@ -36,7 +36,6 @@ function ProductDetail() {
     setTimeout(() => setAdded(false), 2000);
   };
 
-  // ✅ Buy Now — product data ke saath OrderForm pe navigate karo
   const handleBuyNow = () => {
     navigate("/order", {
       state: {
@@ -50,7 +49,7 @@ function ProductDetail() {
           isCustom: product.isCustom,
           image:
             product.images && product.images.length > 0
-              ? `https://seven-star-tile-vanity.onrender.com${product.images[0]}`
+              ? product.images[0]
               : null,
         },
       },
@@ -83,13 +82,13 @@ function ProductDetail() {
           name="description"
           content={
             product.description ||
-            `${product.name} – ${product.category} vanity. Premium quality, factory-direct, custom sizes available at Seven Star Tile Vanity.`
+            `${product.name} – ${product.category} vanity. Premium quality available.`
           }
         />
       </Helmet>
+
       <Navbar />
 
-      {/* Breadcrumb */}
       <div className="detail-breadcrumb">
         <Link to="/">Home</Link>
         <span>›</span>
@@ -100,32 +99,26 @@ function ProductDetail() {
         <span>{product.name}</span>
       </div>
 
-      {/* Main Content */}
       <div className="detail-container">
-        {/* Left — Images */}
+        {/* Images */}
         <div className="detail-images">
-          {/* Thumbnails */}
           <div className="detail-thumbnails">
-            {product.images &&
-              product.images.map((img, i) => (
-                <div
-                  key={i}
-                  className={`detail-thumb ${i === currentImage ? "active" : ""}`}
-                  onClick={() => setCurrentImage(i)}
-                >
-                  <img src={img} alt="" />
-                </div>
-              ))}
+            {product.images?.map((img, i) => (
+              <div
+                key={i}
+                className={`detail-thumb ${i === currentImage ? "active" : ""}`}
+                onClick={() => setCurrentImage(i)}
+              >
+                <img src={img} alt="" />
+              </div>
+            ))}
           </div>
 
-          {/* Main Image */}
           <div className="detail-main-img">
-            {product.images && product.images.length > 0 ? (
+            {product.images?.length > 0 ? (
               <>
-                <img
-                  src={`https://seven-star-tile-vanity.onrender.com${product.images[currentImage]}`}
-                  alt={product.name}
-                />
+                <img src={product.images[currentImage]} alt={product.name} />
+
                 {product.images.length > 1 && (
                   <>
                     <button
@@ -159,7 +152,7 @@ function ProductDetail() {
           </div>
         </div>
 
-        {/* Right — Info */}
+        {/* Info */}
         <div className="detail-info">
           <div className="detail-badges">
             {product.finish && (
@@ -182,30 +175,22 @@ function ProductDetail() {
 
           <p className="detail-desc">{product.description}</p>
 
-          {/* Details Table */}
           <div className="detail-table">
             {product.size && (
               <div className="detail-table-row">
-                <span className="detail-table-label">Size</span>
-                <span className="detail-table-value">{product.size}</span>
+                <span>Size</span>
+                <span>{product.size}</span>
               </div>
             )}
             {product.finish && (
               <div className="detail-table-row">
-                <span className="detail-table-label">Finish</span>
-                <span className="detail-table-value">{product.finish}</span>
-              </div>
-            )}
-            {product.category && (
-              <div className="detail-table-row">
-                <span className="detail-table-label">Category</span>
-                <span className="detail-table-value">{product.category}</span>
+                <span>Finish</span>
+                <span>{product.finish}</span>
               </div>
             )}
             <div className="detail-table-row">
-              <span className="detail-table-label">Availability</span>
+              <span>Availability</span>
               <span
-                className="detail-table-value"
                 style={{ color: product.stock > 0 ? "#1D9E75" : "#d9534f" }}
               >
                 {product.stock > 0 ? "In Stock" : "Out of Stock"}
@@ -217,7 +202,9 @@ function ProductDetail() {
           <div className="detail-buttons">
             {product.isCustom ? (
               <a
-                href="https://wa.me/923XXXXXXXXX"
+                href={`https://wa.me/923237429771?text=${encodeURIComponent(
+                  `Hello, I want to place a custom order for ${product.name}`,
+                )}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="detail-whatsapp-btn"
@@ -233,18 +220,19 @@ function ProductDetail() {
                   {added ? "✓ Added to Cart!" : "Add to Cart"}
                 </button>
 
-                {/* ✅ Buy Now — ab Link nahi, button hai */}
                 <button onClick={handleBuyNow} className="detail-buy-btn">
                   Buy Now
                 </button>
 
                 <a
-                  href="https://wa.me/923XXXXXXXXX"
+                  href={`https://wa.me/923237429771?text=${encodeURIComponent(
+                    `Hello, I am interested in ${product.name}`,
+                  )}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="detail-whatsapp-btn"
                 >
-                  💬 Buy on WhatsApp
+                  💬 WhatsApp Us
                 </a>
               </>
             )}
@@ -256,7 +244,6 @@ function ProductDetail() {
         </div>
       </div>
 
-      {/* Related Products */}
       <RelatedProducts category={product.category} currentId={product._id} />
 
       <Footer />
@@ -265,13 +252,14 @@ function ProductDetail() {
   );
 }
 
-// Related Products Component
 function RelatedProducts({ category, currentId }) {
   const [related, setRelated] = useState([]);
 
   useEffect(() => {
     fetch(
-      `https://seven-star-tile-vanity.onrender.com/api/products?category=${encodeURIComponent(category)}`,
+      `https://seven-star-tile-vanity.onrender.com/api/products?category=${encodeURIComponent(
+        category,
+      )}`,
     )
       .then((res) => res.json())
       .then((data) => {
@@ -292,7 +280,7 @@ function RelatedProducts({ category, currentId }) {
             className="related-card"
           >
             <div className="related-img">
-              {product.images && product.images[0] ? (
+              {product.images?.[0] ? (
                 <img src={product.images[0]} alt={product.name} />
               ) : (
                 <span>🎨</span>
