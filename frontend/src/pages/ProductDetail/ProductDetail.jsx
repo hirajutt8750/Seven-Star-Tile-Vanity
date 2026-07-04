@@ -113,10 +113,7 @@ function ProductDetail() {
                   className={`detail-thumb ${i === currentImage ? "active" : ""}`}
                   onClick={() => setCurrentImage(i)}
                 >
-                  <img
-                    src={`https://seven-star-tile-vanity.onrender.com${img}`}
-                    alt=""
-                  />
+                  <img src={img} alt="" />
                 </div>
               ))}
           </div>
@@ -296,10 +293,7 @@ function RelatedProducts({ category, currentId }) {
           >
             <div className="related-img">
               {product.images && product.images[0] ? (
-                <img
-                  src={`https://seven-star-tile-vanity.onrender.com${product.images[0]}`}
-                  alt={product.name}
-                />
+                <img src={product.images[0]} alt={product.name} />
               ) : (
                 <span>🎨</span>
               )}

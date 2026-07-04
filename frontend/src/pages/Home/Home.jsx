@@ -6,6 +6,7 @@ import Hero from "../../components/Hero/Hero";
 import Footer from "../../components/Footer/Footer";
 import WhatsAppButton from "../../components/WhatsAppButton/WhatsAppButton";
 import companyCard from "../../assets/company-card.jpg";
+import Testimonials from "../../components/Testimonials/Testimonials";
 import "./Home.css";
 
 const WHY_CARDS = [
@@ -183,6 +184,8 @@ function Home() {
           ))}
         </div>
       </section>
+
+      <Testimonials />
 
       {/* ── POLICIES ── */}
       <section className="h-policies">

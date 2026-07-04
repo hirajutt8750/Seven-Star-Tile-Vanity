@@ -15,8 +15,6 @@ import CategoryPage from "./pages/CategoryPage/CategoryPage";
 import ProductDetail from "./pages/ProductDetail/ProductDetail";
 import Messages from "./admin/pages/Messages";
 import ScrollToTop from "./components/ScrollToTop";
-
-// Admin imports
 import AdminLayout from "./admin/components/AdminLayout";
 import Dashboard from "./admin/pages/Dashboard";
 import AdminProducts from "./admin/pages/Products";
@@ -25,6 +23,7 @@ import ForgotPassword from "./admin/pages/ForgotPassword";
 import ResetPassword from "./admin/pages/ResetPassword";
 import AuditLogs from "./admin/pages/AuditLogs";
 import TwoFactorSetup from "./admin/pages/TwoFactorSetup";
+import Reviews from "./admin/pages/Reviews";
 
 function App() {
   return (
@@ -45,6 +44,11 @@ function App() {
 
           {/* Admin Routes */}
           <Route path="/admin/login" element={<Login />} />
+          <Route path="/admin/forgot-password" element={<ForgotPassword />} />
+          <Route
+            path="/admin/reset-password/:token"
+            element={<ResetPassword />}
+          />
           <Route
             path="/admin"
             element={
@@ -54,11 +58,6 @@ function App() {
                 </AdminLayout>
               </ProtectedRoute>
             }
-          />
-          <Route path="/admin/forgot-password" element={<ForgotPassword />} />
-          <Route
-            path="/admin/reset-password/:token"
-            element={<ResetPassword />}
           />
           <Route
             path="/admin/audit-logs"
@@ -116,6 +115,16 @@ function App() {
               <ProtectedRoute>
                 <AdminLayout>
                   <Messages />
+                </AdminLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/reviews"
+            element={
+              <ProtectedRoute>
+                <AdminLayout>
+                  <Reviews />
                 </AdminLayout>
               </ProtectedRoute>
             }

@@ -74,6 +74,7 @@ app.use("/api/categories", require("./routes/categoryRoutes"));
 app.use("/api/orders", require("./routes/orderRoutes"));
 app.use("/api/contact", require("./routes/contactRoutes"));
 app.use("/api/audit-logs", require("./routes/auditRoutes"));
+app.use("/api/reviews", require("./routes/reviewRoutes"));
 
 // 404
 app.use((req, res) => {

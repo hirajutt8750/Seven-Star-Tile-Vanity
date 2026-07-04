@@ -100,10 +100,7 @@ function CategoryPage() {
                 <Link to={`/product/${product._id}`}>
                   <div className="category-card-img">
                     {product.images && product.images.length > 0 ? (
-                      <img
-                        src={`https://seven-star-tile-vanity.onrender.com${product.images[0]}`}
-                        alt={product.name}
-                      />
+                      <img src={product.images[0]} alt={product.name} />
                     ) : (
                       <span className="category-card-emoji">🎨</span>
                     )}

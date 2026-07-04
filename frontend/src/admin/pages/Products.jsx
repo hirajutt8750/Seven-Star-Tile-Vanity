@@ -438,7 +438,7 @@ function Products() {
                 {images.map((img, index) => (
                   <div key={index} style={{ position: "relative" }}>
                     <img
-                      src={`https://seven-star-tile-vanity.onrender.com${img}`}
+                      src={img}
                       alt=""
                       style={{
                         width: "80px",
@@ -565,7 +565,7 @@ function Products() {
                 <td style={{ padding: "12px" }}>
                   {product.images && product.images[0] ? (
                     <img
-                      src={`https://seven-star-tile-vanity.onrender.com${product.images[0]}`}
+                      src={product.images[0]}
                       alt=""
                       style={{
                         width: "50px",
@@ -660,7 +660,7 @@ function Products() {
             {product.images && product.images[0] ? (
               <img
                 className="product-card-thumb"
-                src={`https://seven-star-tile-vanity.onrender.com${product.images[0]}`}
+                src={product.images[0]}
                 alt=""
               />
             ) : (

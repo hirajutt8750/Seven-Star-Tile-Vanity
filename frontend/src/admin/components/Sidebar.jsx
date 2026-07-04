@@ -23,6 +23,7 @@ function Sidebar({ isOpen, onClose }) {
     { path: "/admin/messages", label: "Messages", icon: "✉️" },
     { path: "/admin/audit-logs", label: "Audit Logs", icon: "📋" },
     { path: "/admin/2fa-setup", label: "2FA Setup", icon: "🔐" },
+    { path: "/admin/reviews", label: "Customer Reviews", icon: "⭐" },
   ];
 
   return (
