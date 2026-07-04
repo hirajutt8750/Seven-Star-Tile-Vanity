@@ -53,7 +53,7 @@ function CategoryPage() {
           price: product.price,
           image:
             product.images && product.images.length > 0
-              ? `https://seven-star-tile-vanity.onrender.com${product.images[0]}`
+              ? product.images[0]
               : null,
         },
       },
@@ -79,7 +79,7 @@ function CategoryPage() {
           <span className="category-breadcrumb-sep">›</span>
           <span className="category-breadcrumb-active">{categoryName}</span>
           <h1>{categoryName}</h1>
-          <p>Premium quality — direct factory price</p>
+          <p>High Quality — Straight from the Factor</p>
         </div>
       </div>
 
@@ -137,7 +137,9 @@ function CategoryPage() {
                   <div className="category-card-btns">
                     {product.isCustom ? (
                       <a
-                        href="https://wa.me/923237429771"
+                        href={`https://wa.me/923237429771?text=${encodeURIComponent(
+                          `Hello, I am interested in ${product.name}`,
+                        )}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="category-whatsapp-btn"
