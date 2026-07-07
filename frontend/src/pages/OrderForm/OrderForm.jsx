@@ -57,6 +57,9 @@ function OrderForm() {
   const fileInputRef = useRef(null);
   const selectedProduct = location.state?.selectedProduct || null;
 
+  // Agar selectedProduct hai to "Buy Now" se aaya, warna Cart se aaya
+  const isFromCart = !selectedProduct && cartItems.length > 0;
+
   const [formData, setFormData] = useState({
     fullName: "",
     phone: "",
@@ -81,7 +84,6 @@ function OrderForm() {
 
   const [phoneCountry, setPhoneCountry] = useState(DEFAULT_COUNTRY);
   const [altPhoneCountry, setAltPhoneCountry] = useState(DEFAULT_COUNTRY);
-
   const [errors, setErrors] = useState({});
   const [customImages, setCustomImages] = useState([]);
 
@@ -202,20 +204,45 @@ function OrderForm() {
       await res.json();
       clearCart();
 
-      // WhatsApp redirect with order details
-      const cartSummary =
-        cartItems.length > 0
-          ? cartItems
-              .map(
-                (item) =>
-                  `  - ${item.name} x${item.quantity} = Rs. ${(
-                    item.price * item.quantity
-                  ).toLocaleString()}`,
-              )
-              .join("\n")
-          : "  - No cart items";
+      // WhatsApp message build karo
+      let whatsappMessage = "";
 
-      const whatsappMessage = `
+      if (isFromCart) {
+        // Cart se aaya — cart items dikhao
+        const cartSummary = cartItems
+          .map(
+            (item) =>
+              `  - ${item.name} x${item.quantity} = Rs. ${(
+                item.price * item.quantity
+              ).toLocaleString()}`,
+          )
+          .join("\n");
+
+        whatsappMessage = `
+🛒 *New Order Request - 7Star Tile Vanity*
+
+👤 *Customer Details:*
+  Name: ${formData.fullName}
+  Phone: ${fullPhone}
+  Alt Phone: ${fullAltPhone || "N/A"}
+  City: ${formData.city}
+  Address: ${formData.address}
+
+🛍️ *Cart Items:*
+${cartSummary}
+  Total: Rs. ${totalPrice.toLocaleString()}
+
+🚚 *Delivery Details:*
+  Method: ${formData.deliveryMethod === "home" ? "Home Delivery" : "Factory Pickup"}
+  ${formData.deliveryMethod === "home" ? `Delivery Address: ${formData.deliveryAddress}` : ""}
+  Required Date: ${formData.deliveryDate}
+  Urgency: ${formData.urgency === "urgent" ? "URGENT ⚡" : "Normal"}
+
+📝 *Special Notes:* ${formData.specialNotes || "None"}
+        `.trim();
+      } else {
+        // Buy Now se aaya — product details dikhao
+        whatsappMessage = `
 🛒 *New Order Request - 7Star Tile Vanity*
 
 👤 *Customer Details:*
@@ -234,10 +261,6 @@ function OrderForm() {
   Design: ${formData.design || "N/A"}
   Quantity: ${formData.quantity || "N/A"}
 
-🛍️ *Cart Items:*
-${cartSummary}
-  Total: Rs. ${(totalPrice || 0).toLocaleString()}
-
 🚚 *Delivery Details:*
   Method: ${formData.deliveryMethod === "home" ? "Home Delivery" : "Factory Pickup"}
   ${formData.deliveryMethod === "home" ? `Delivery Address: ${formData.deliveryAddress}` : ""}
@@ -245,7 +268,8 @@ ${cartSummary}
   Urgency: ${formData.urgency === "urgent" ? "URGENT ⚡" : "Normal"}
 
 📝 *Special Notes:* ${formData.specialNotes || "None"}
-      `.trim();
+        `.trim();
+      }
 
       const adminNumber = "923237429771";
       const whatsappUrl = `https://wa.me/${adminNumber}?text=${encodeURIComponent(whatsappMessage)}`;
@@ -773,7 +797,7 @@ ${cartSummary}
               </div>
             </div>
 
-            {cartItems.length > 0 && (
+            {isFromCart && cartItems.length > 0 && (
               <div className="cart-summary-box">
                 <h4>Cart Items</h4>
                 {cartItems.map((item) => (
@@ -808,20 +832,6 @@ ${cartSummary}
             <button type="submit" className="submit-btn">
               ✈ Submit Order Request
             </button>
-
-            <div className="whatsapp-help">
-              <div className="whatsapp-help-icon">💬</div>
-              <div className="whatsapp-help-text">
-                <p>Need Help? Contact us on WhatsApp</p>
-                <a
-                  href="https://wa.me/923237429771"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Chat With Us on WhatsApp
-                </a>
-              </div>
-            </div>
 
             <div className="form-back">
               <Link to="/" className="form-back-btn">
