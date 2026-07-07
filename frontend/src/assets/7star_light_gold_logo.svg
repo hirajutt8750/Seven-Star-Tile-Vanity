@@ -1,0 +1,52 @@
+<svg width="680" height="680" viewBox="0 0 680 680" role="img" xmlns="http://www.w3.org/2000/svg">
+  <title>7Star Tile Vanity Logo - Light and Gold</title>
+  <desc>Round logo cream background double gold border 3D gold star 7STAR TILE VANITY text centered</desc>
+
+  <defs>
+    <linearGradient id="sg1" x1="0%" y1="0%" x2="60%" y2="100%">
+      <stop offset="0%" stop-color="#f0d060"/>
+      <stop offset="100%" stop-color="#b8860b"/>
+    </linearGradient>
+    <linearGradient id="sg2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffe080"/>
+      <stop offset="100%" stop-color="#c9a84c"/>
+    </linearGradient>
+    <linearGradient id="sg3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3a3000"/>
+      <stop offset="100%" stop-color="#6a5800"/>
+    </linearGradient>
+    <linearGradient id="sg4" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#c9a84c"/>
+      <stop offset="100%" stop-color="#7a6020"/>
+    </linearGradient>
+    <linearGradient id="sg5" x1="20%" y1="0%" x2="80%" y2="100%">
+      <stop offset="0%" stop-color="#d4a820"/>
+      <stop offset="100%" stop-color="#8a6a00"/>
+    </linearGradient>
+    <linearGradient id="sgl" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fff8d0" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#c9a84c" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <circle cx="340" cy="340" r="300" fill="#FAF6EF"/>
+  <circle cx="340" cy="340" r="298" fill="none" stroke="#A67C00" stroke-width="6"/>
+  <circle cx="340" cy="340" r="280" fill="none" stroke="#A67C00" stroke-width="1.5"/>
+
+  <g transform="translate(165,293) scale(0.625)">
+    <polygon points="90,0 110,58 170,58 122,94 141,152 90,116 39,152 58,94 10,58 70,58" fill="url(#sg5)"/>
+    <polygon points="90,0 70,58 90,48 110,58" fill="url(#sg1)"/>
+    <polygon points="90,0 110,58 90,48" fill="url(#sg2)"/>
+    <polygon points="170,58 122,94 130,75 110,58" fill="url(#sg3)"/>
+    <polygon points="122,94 141,152 118,120 90,116" fill="url(#sg4)"/>
+    <polygon points="39,152 58,94 90,116 62,120" fill="url(#sg3)"/>
+    <polygon points="10,58 58,94 70,75 70,58" fill="url(#sg2)"/>
+    <polygon points="90,48 110,58 130,75 122,94 90,116 62,120 58,94 70,75 70,58" fill="url(#sg5)"/>
+    <polygon points="90,0 110,58 90,48 70,58" fill="url(#sgl)" opacity="0.5"/>
+  </g>
+
+  <text x="287" y="356" font-family="'Arial Black', Arial, sans-serif" font-size="62" font-weight="900" fill="#8a6a00" letter-spacing="2">7STAR</text>
+  <line x1="287" y1="370" x2="530" y2="370" stroke="#8a6a00" stroke-width="2"/>
+  <text x="408" y="396" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="500" fill="#8a6a00" letter-spacing="7">TILE VANITY</text>
+
+</svg>

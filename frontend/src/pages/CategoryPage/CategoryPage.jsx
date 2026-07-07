@@ -89,9 +89,6 @@ function CategoryPage() {
         ) : products.length === 0 ? (
           <div className="category-empty">
             <p>No products found in this category.</p>
-            <Link to="/" className="category-back-btn">
-              Back to Home
-            </Link>
           </div>
         ) : (
           <div className="category-grid">
