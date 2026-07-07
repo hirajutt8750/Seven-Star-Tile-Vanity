@@ -1,19 +1,33 @@
 import React, { useState } from "react";
 import logo from "../../assets/seven_star_logo.svg";
+import logoLight from "../../assets/7star_light_gold_logo.svg";
+{
+  /* ← NAYI LINE */
+}
 import { Link } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
+import { useTheme } from "../../context/ThemeContext";
+{
+  /* ← NAYI LINE */
+}
 import "./Navbar.css";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { totalItems } = useCart();
+  const { theme, toggleTheme } = useTheme();
+  {
+    /* ← NAYI LINE */
+  }
 
   return (
     <nav className="navbar">
       {/* Logo */}
       <Link to="/" className="navbar-logo">
         <img
-          src={logo}
+          src={
+            theme === "dark" ? logo : logoLight
+          } /* ← CHANGE: pehle sirf "logo" tha */
           alt="Seven Star Tile Vanity"
           className="navbar-logo-img"
         />
@@ -71,12 +85,19 @@ function Navbar() {
 
       {/* Right Side */}
       <div className="navbar-right">
+        {/* Theme Toggle Button */} {/* ← NAYA BLOCK */}
+        <button
+          className="theme-toggle-btn"
+          onClick={toggleTheme}
+          aria-label="Toggle theme"
+        >
+          {theme === "dark" ? "☀️" : "🌙"}
+        </button>
         {/* Cart */}
         <Link to="/cart" className="cart-icon">
           🛒
           {totalItems > 0 && <span className="cart-count">{totalItems}</span>}
         </Link>
-
         {/* Hamburger / Cross */}
         <div
           className={`hamburger ${menuOpen ? "open" : ""}`}
