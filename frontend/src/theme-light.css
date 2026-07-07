@@ -9,9 +9,14 @@
    ══════════════════════════════════════════════════════════ */
 
 /* ── BODY / BASE ─────────────────────────────────── */
-[data-theme="light"] body {
+[data-theme="light"] html,
+[data-theme="light"] body,
+[data-theme="light"] #root {
   background-color: #faf6ef !important;
   color: #1a1a1a !important;
+}
+[data-theme="light"] .cart-page {
+  background-color: #faf6ef !important;
 }
 
 /* ══════════════════════════════════════════════════
@@ -1493,6 +1498,77 @@
 }
 [data-theme="light"] .step div p {
   color: #5c5347 !important;
+}
+
+/* ══════════════════════════════════════════════════
+   PHONE INPUT (country selector dropdown)
+══════════════════════════════════════════════════ */
+[data-theme="light"] .phone-input-wrapper {
+  border-color: rgba(166, 124, 0, 0.25) !important;
+  background: #ffffff !important;
+}
+[data-theme="light"] .phone-input-wrapper:focus-within {
+  border-color: #a67c00 !important;
+}
+[data-theme="light"] .phone-country-btn {
+  background: #faf6ef !important;
+  border-right-color: rgba(166, 124, 0, 0.2) !important;
+  color: #1a1a1a !important;
+}
+[data-theme="light"] .phone-country-btn:hover {
+  background: #f2ede2 !important;
+}
+[data-theme="light"] .phone-dial {
+  color: #a67c00 !important;
+}
+[data-theme="light"] .phone-chevron {
+  color: #888888 !important;
+}
+[data-theme="light"] .phone-dropdown {
+  background: #ffffff !important;
+  border-color: rgba(166, 124, 0, 0.2) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
+}
+[data-theme="light"] .phone-search-wrap {
+  border-bottom-color: rgba(166, 124, 0, 0.15) !important;
+}
+[data-theme="light"] .phone-search {
+  background: #faf6ef !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
+  color: #1a1a1a !important;
+}
+[data-theme="light"] .phone-search:focus {
+  border-color: #a67c00 !important;
+}
+[data-theme="light"] .phone-search::placeholder {
+  color: #999999 !important;
+}
+[data-theme="light"] .phone-country-list {
+  scrollbar-color: #d9cfb8 transparent !important;
+}
+[data-theme="light"] .phone-country-list::-webkit-scrollbar-thumb {
+  background: #d9cfb8 !important;
+}
+[data-theme="light"] .phone-country-item:hover {
+  background: #f2ede2 !important;
+}
+[data-theme="light"] .phone-country-item.selected {
+  background: rgba(166, 124, 0, 0.1) !important;
+}
+[data-theme="light"] .phone-country-name {
+  color: #333333 !important;
+}
+[data-theme="light"] .phone-country-dial {
+  color: #a67c00 !important;
+}
+[data-theme="light"] .phone-no-results {
+  color: #999999 !important;
+}
+[data-theme="light"] .phone-number-input {
+  color: #1a1a1a !important;
+}
+[data-theme="light"] .phone-number-input::placeholder {
+  color: #aaaaaa !important;
 }
 
 /* ══════════════════════════════════════════════════
