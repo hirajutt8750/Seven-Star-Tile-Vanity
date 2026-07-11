@@ -2,17 +2,23 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import { getMessages } from "../api/messages";
-import adminPic from "../../assets/admin-pic.jpg";
+
+const API = "https://seven-star-tile-vanity.onrender.com";
+const DEFAULT_PIC =
+  "https://ui-avatars.com/api/?name=Admin&background=00E5FF&color=0A0F1E&size=128&bold=true";
 
 function AdminLayout({ children }) {
   const [unreadCount, setUnreadCount] = useState(0);
   const [showDropdown, setShowDropdown] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [profile, setProfile] = useState({ name: "Admin", profileImage: null });
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
+  const token = sessionStorage.getItem("adminToken");
 
   useEffect(() => {
     loadUnread();
+    loadProfile();
     const interval = setInterval(loadUnread, 30000);
     return () => clearInterval(interval);
   }, []);
@@ -26,6 +32,18 @@ function AdminLayout({ children }) {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const loadProfile = async () => {
+    try {
+      const res = await fetch(`${API}/api/auth/profile`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (data.email) setProfile(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const loadUnread = async () => {
     try {
@@ -41,6 +59,9 @@ function AdminLayout({ children }) {
     sessionStorage.removeItem("adminToken");
     navigate("/admin/login");
   };
+
+  const profilePic = profile.profileImage || DEFAULT_PIC;
+  const adminName = profile.name || "Saad Bin Saeed";
 
   const currentDate = new Date().toLocaleDateString("en-US", {
     weekday: "long",
@@ -135,7 +156,6 @@ function AdminLayout({ children }) {
           50% { transform: scale(1.12); }
         }
 
-        /* ── HAMBURGER MENU BUTTON ── */
         .hamburger-btn {
           display: none;
           width: 42px; height: 42px;
@@ -298,24 +318,15 @@ function AdminLayout({ children }) {
           min-width: 0;
         }
 
-        /* ══════════════════════════════════════════════
-           MOBILE — hamburger appears, sidebar margin removed
-        ══════════════════════════════════════════════ */
         @media (max-width: 900px) {
-          .admin-content-wrap {
-            margin-left: 0;
-          }
-
+          .admin-content-wrap { margin-left: 0; }
           .hamburger-btn { display: flex; }
-
           .topbar { padding: 0 16px; }
           .topbar-date { display: none; }
           .topbar-divider { display: none; }
-
           .profile-text { display: none; }
           .profile-btn { padding: 5px; }
           .profile-btn-arrow { display: none; }
-
           .admin-dropdown {
             position: fixed;
             top: 64px;
@@ -332,16 +343,11 @@ function AdminLayout({ children }) {
         }
       `}</style>
 
-      {/* Sidebar — receives open/close state */}
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      {/* Right Side */}
       <div className="admin-content-wrap">
-        {/* ── TOPBAR ── */}
         <div className="topbar">
-          {/* Left — Hamburger + Brand */}
           <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
-            {/* Hamburger — mobile only */}
             <button
               className="hamburger-btn"
               onClick={() => setSidebarOpen(true)}
@@ -361,12 +367,9 @@ function AdminLayout({ children }) {
             </div>
           </div>
 
-          {/* Right — Actions */}
           <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-            {/* Date pill */}
             <div className="topbar-date">{currentDate}</div>
 
-            {/* Notification Bell */}
             <div
               className="notif-btn"
               onClick={() => navigate("/admin/messages")}
@@ -379,13 +382,12 @@ function AdminLayout({ children }) {
 
             <div className="topbar-divider" />
 
-            {/* Profile */}
             <div style={{ position: "relative" }} ref={dropdownRef}>
               <div
                 className="profile-btn"
                 onClick={() => setShowDropdown(!showDropdown)}
               >
-                <img src={adminPic} alt="Admin" className="profile-avatar" />
+                <img src={profilePic} alt="Admin" className="profile-avatar" />
                 <div className="profile-text">
                   <p className="profile-btn-name">Saad Bin Saeed</p>
                   <p className="profile-btn-role">Administrator</p>
@@ -400,12 +402,11 @@ function AdminLayout({ children }) {
                 </span>
               </div>
 
-              {/* Dropdown */}
               {showDropdown && (
                 <div className="admin-dropdown">
                   <div className="admin-dd-header">
                     <img
-                      src={adminPic}
+                      src={profilePic}
                       alt="Admin"
                       className="admin-dd-avatar"
                     />
@@ -413,6 +414,17 @@ function AdminLayout({ children }) {
                       <p className="admin-dd-name">Saad Bin Saeed</p>
                       <p className="admin-dd-role">Administrator</p>
                     </div>
+                  </div>
+
+                  <div
+                    className="admin-dd-item"
+                    onClick={() => {
+                      navigate("/admin/profile");
+                      setShowDropdown(false);
+                    }}
+                  >
+                    <div className="dd-icon">👤</div>
+                    <span>Profile Settings</span>
                   </div>
 
                   <div
@@ -473,7 +485,6 @@ function AdminLayout({ children }) {
           </div>
         </div>
 
-        {/* ── MAIN CONTENT ── */}
         <div
           style={{
             flex: 1,

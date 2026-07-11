@@ -277,5 +277,30 @@ router.post("/reset-password/:token", async (req, res) => {
     res.status(500).json({ message: "Server error." });
   }
 });
+// Get Profile
+router.get("/profile", protect, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.userId).select(
+      "-password -resetPasswordToken -resetPasswordExpires -twoFactorSecret",
+    );
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: "Server error." });
+  }
+});
 
+// Update Profile Image
+router.put("/profile/image", protect, async (req, res) => {
+  try {
+    const { profileImage } = req.body;
+    const user = await User.findByIdAndUpdate(
+      req.user.userId,
+      { profileImage },
+      { new: true },
+    ).select("-password");
+    res.json({ message: "Profile image updated!", user });
+  } catch (error) {
+    res.status(500).json({ message: "Server error." });
+  }
+});
 module.exports = router;

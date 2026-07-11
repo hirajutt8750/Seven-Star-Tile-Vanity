@@ -26,6 +26,7 @@ import ResetPassword from "./admin/pages/ResetPassword";
 import AuditLogs from "./admin/pages/AuditLogs";
 import TwoFactorSetup from "./admin/pages/TwoFactorSetup";
 import Reviews from "./admin/pages/Reviews";
+import Profile from "./admin/pages/Profile";
 
 function App() {
   return (
@@ -58,6 +59,16 @@ function App() {
                 <ProtectedRoute>
                   <AdminLayout>
                     <Dashboard />
+                  </AdminLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/profile"
+              element={
+                <ProtectedRoute>
+                  <AdminLayout>
+                    <Profile />
                   </AdminLayout>
                 </ProtectedRoute>
               }
