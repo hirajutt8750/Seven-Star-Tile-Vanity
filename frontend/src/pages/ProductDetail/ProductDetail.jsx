@@ -7,6 +7,197 @@ import WhatsAppButton from "../../components/WhatsAppButton/WhatsAppButton";
 import { useCart } from "../../context/CartContext";
 import "./ProductDetail.css";
 
+const API = "https://seven-star-tile-vanity.onrender.com";
+
+function StarRating({ value, onChange }) {
+  const [hovered, setHovered] = useState(0);
+  return (
+    <div
+      style={{
+        display: "flex",
+        gap: "4px",
+        cursor: onChange ? "pointer" : "default",
+      }}
+    >
+      {[1, 2, 3, 4, 5].map((star) => (
+        <span
+          key={star}
+          style={{
+            fontSize: "22px",
+            color: star <= (hovered || value) ? "#d4af37" : "#444",
+            transition: "color 0.15s",
+          }}
+          onMouseEnter={() => onChange && setHovered(star)}
+          onMouseLeave={() => onChange && setHovered(0)}
+          onClick={() => onChange && onChange(star)}
+        >
+          ★
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function ReviewsSection({ productId }) {
+  const [reviews, setReviews] = useState([]);
+  const [avgRating, setAvgRating] = useState(0);
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    rating: 0,
+    comment: "",
+  });
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    fetch(`${API}/api/reviews/product/${productId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setReviews(data.reviews || []);
+        setAvgRating(data.averageRating || 0);
+      })
+      .catch(() => {});
+  }, [productId]);
+
+  const handleSubmit = async () => {
+    setError("");
+    if (!form.name || !form.email || !form.rating || !form.comment) {
+      setError("Please fill all fields and select a rating.");
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const res = await fetch(`${API}/api/reviews`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...form, product: productId }),
+      });
+      if (res.ok) {
+        setSubmitted(true);
+        setForm({ name: "", email: "", rating: 0, comment: "" });
+      } else {
+        setError("Something went wrong. Try again.");
+      }
+    } catch {
+      setError("Something went wrong. Try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="reviews-section">
+      <h2 className="reviews-title">Customer Reviews</h2>
+
+      {/* Summary */}
+      {reviews.length > 0 && (
+        <div className="reviews-summary">
+          <span className="reviews-avg">{avgRating}</span>
+          <div>
+            <StarRating value={Math.round(avgRating)} />
+            <span className="reviews-count">
+              {reviews.length} review{reviews.length !== 1 ? "s" : ""}
+            </span>
+          </div>
+        </div>
+      )}
+
+      {/* Reviews List */}
+      {reviews.length === 0 ? (
+        <p className="reviews-empty">No reviews yet. Be the first to review!</p>
+      ) : (
+        <div className="reviews-list">
+          {reviews.map((r) => (
+            <div key={r._id} className="review-card">
+              <div className="review-header">
+                <div className="review-avatar">
+                  {r.name.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <div className="review-name">{r.name}</div>
+                  <StarRating value={r.rating} />
+                </div>
+                <div className="review-date">
+                  {new Date(r.createdAt).toLocaleDateString("en-PK", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                  })}
+                </div>
+              </div>
+              <p className="review-comment">{r.comment}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Form */}
+      <div className="review-form">
+        <h3 className="review-form-title">Write a Review</h3>
+
+        {submitted ? (
+          <div className="review-success">
+            ✓ Review submitted! It will appear after approval.
+          </div>
+        ) : (
+          <>
+            {error && <div className="review-error">⚠ {error}</div>}
+
+            <div className="review-form-grid">
+              <div className="review-field">
+                <label>Your Name</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Ahmed Khan"
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                />
+              </div>
+              <div className="review-field">
+                <label>Email Address</label>
+                <input
+                  type="email"
+                  placeholder="your@email.com"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <div className="review-field">
+              <label>Rating</label>
+              <StarRating
+                value={form.rating}
+                onChange={(v) => setForm({ ...form, rating: v })}
+              />
+            </div>
+
+            <div className="review-field">
+              <label>Your Review</label>
+              <textarea
+                placeholder="Share your experience with this product..."
+                rows={4}
+                value={form.comment}
+                onChange={(e) => setForm({ ...form, comment: e.target.value })}
+              />
+            </div>
+
+            <button
+              className="review-submit-btn"
+              onClick={handleSubmit}
+              disabled={submitting}
+            >
+              {submitting ? "Submitting..." : "Submit Review"}
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function ProductDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -18,7 +209,7 @@ function ProductDetail() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    fetch(`https://seven-star-tile-vanity.onrender.com/api/products/${id}`)
+    fetch(`${API}/api/products/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setProduct(data);
@@ -246,6 +437,8 @@ function ProductDetail() {
 
       <RelatedProducts category={product.category} currentId={product._id} />
 
+      <ReviewsSection productId={product._id} />
+
       <Footer />
       <WhatsAppButton />
     </div>
@@ -256,11 +449,7 @@ function RelatedProducts({ category, currentId }) {
   const [related, setRelated] = useState([]);
 
   useEffect(() => {
-    fetch(
-      `https://seven-star-tile-vanity.onrender.com/api/products?category=${encodeURIComponent(
-        category,
-      )}`,
-    )
+    fetch(`${API}/api/products?category=${encodeURIComponent(category)}`)
       .then((res) => res.json())
       .then((data) => {
         setRelated(data.filter((p) => p._id !== currentId).slice(0, 4));
