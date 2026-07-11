@@ -11,7 +11,6 @@ function Profile() {
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState("");
   const [preview, setPreview] = useState(null);
-  const [dragOver, setDragOver] = useState(false);
   const fileRef = useRef();
   const token = sessionStorage.getItem("adminToken");
 
@@ -24,7 +23,8 @@ function Profile() {
       .catch(() => {});
   }, []);
 
-  const handleFile = (file) => {
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
     if (!file) return;
     if (!file.type.startsWith("image/")) {
       setMessage("error:Please select an image file.");
@@ -32,14 +32,6 @@ function Profile() {
     }
     setPreview(URL.createObjectURL(file));
     setMessage("");
-  };
-
-  const handleFileChange = (e) => handleFile(e.target.files[0]);
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    setDragOver(false);
-    handleFile(e.dataTransfer.files[0]);
   };
 
   const handleUpload = async () => {
@@ -102,17 +94,13 @@ function Profile() {
       <style>{`
         .profile-page-wrap { max-width: 900px; margin: 0 auto; }
 
-        .profile-header {
-          margin-bottom: 32px;
-        }
+        .profile-header { margin-bottom: 32px; }
         .profile-header h1 {
           font-size: 28px; font-weight: 800;
           color: #fff; margin: 0 0 6px;
           letter-spacing: -0.5px;
         }
-        .profile-header p {
-          font-size: 14px; color: #5a7a99; margin: 0;
-        }
+        .profile-header p { font-size: 14px; color: #5a7a99; margin: 0; }
 
         .profile-grid {
           display: grid;
@@ -120,13 +108,11 @@ function Profile() {
           gap: 24px;
         }
 
-        /* LEFT CARD */
         .profile-card {
           background: #0D1B2E;
           border: 1px solid #1E3A5F;
           border-radius: 20px;
           overflow: hidden;
-          position: relative;
         }
         .profile-card-banner {
           height: 90px;
@@ -138,11 +124,8 @@ function Profile() {
           position: absolute;
           inset: 0;
           background: repeating-linear-gradient(
-            45deg,
-            transparent,
-            transparent 10px,
-            rgba(0,229,255,0.03) 10px,
-            rgba(0,229,255,0.03) 20px
+            45deg, transparent, transparent 10px,
+            rgba(0,229,255,0.03) 10px, rgba(0,229,255,0.03) 20px
           );
         }
         .profile-card-body {
@@ -173,10 +156,11 @@ function Profile() {
           color: #000;
           border: 2px solid #0D1B2E;
           cursor: pointer;
-          font-size: 12px;
+          font-size: 13px;
           display: flex; align-items: center; justify-content: center;
-          font-weight: 700;
+          font-weight: 900;
           transition: transform 0.2s;
+          line-height: 1;
         }
         .profile-avatar-edit:hover { transform: scale(1.1); }
 
@@ -216,8 +200,7 @@ function Profile() {
           text-align: center;
         }
         .profile-stat-val {
-          font-size: 18px; font-weight: 800;
-          color: #00E5FF; display: block;
+          font-size: 18px; display: block;
         }
         .profile-stat-lbl {
           font-size: 10px; color: #5a7a99;
@@ -225,7 +208,6 @@ function Profile() {
           margin-top: 2px; display: block;
         }
 
-        /* RIGHT CARD */
         .profile-right { display: flex; flex-direction: column; gap: 20px; }
 
         .profile-section {
@@ -269,35 +251,7 @@ function Profile() {
           font-size: 14px; color: #E6F1FF; font-weight: 500;
         }
 
-        /* UPLOAD ZONE */
-        .upload-zone {
-          border: 2px dashed rgba(0,229,255,0.2);
-          border-radius: 14px;
-          padding: 28px;
-          text-align: center;
-          cursor: pointer;
-          transition: all 0.25s;
-          background: rgba(0,229,255,0.02);
-          margin-bottom: 16px;
-        }
-        .upload-zone:hover, .upload-zone.drag { 
-          border-color: rgba(0,229,255,0.5);
-          background: rgba(0,229,255,0.06);
-        }
-        .upload-zone-icon {
-          font-size: 36px; margin-bottom: 10px;
-        }
-        .upload-zone-title {
-          font-size: 14px; font-weight: 600; color: #E6F1FF;
-          margin-bottom: 4px;
-        }
-        .upload-zone-sub {
-          font-size: 12px; color: #5a7a99;
-        }
-        .upload-zone-sub span {
-          color: #00E5FF; cursor: pointer;
-        }
-
+        /* PREVIEW SECTION */
         .preview-wrap {
           display: flex; align-items: center; gap: 16px;
           background: rgba(0,229,255,0.04);
@@ -321,6 +275,7 @@ function Profile() {
           color: #FF5252; border-radius: 8px;
           padding: 6px 12px; font-size: 12px;
           cursor: pointer; font-weight: 600;
+          font-family: inherit;
         }
 
         .upload-btn {
@@ -338,6 +293,22 @@ function Profile() {
           box-shadow: 0 8px 24px rgba(0,180,255,0.3);
         }
         .upload-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .change-photo-btn {
+          width: 100%; padding: 11px;
+          background: transparent;
+          color: #00E5FF;
+          border: 1px solid rgba(0,229,255,0.25);
+          border-radius: 12px; font-size: 13px;
+          font-weight: 600; cursor: pointer;
+          transition: all 0.25s;
+          font-family: inherit;
+          margin-top: 12px;
+        }
+        .change-photo-btn:hover {
+          background: rgba(0,229,255,0.07);
+          border-color: rgba(0,229,255,0.5);
+        }
 
         .msg-box {
           padding: 12px 16px; border-radius: 10px;
@@ -362,7 +333,6 @@ function Profile() {
       `}</style>
 
       <div className="profile-page-wrap">
-        {/* Header */}
         <div className="profile-header">
           <h1>Profile Settings</h1>
           <p>Manage your admin account and profile picture</p>
@@ -384,7 +354,7 @@ function Profile() {
                   onClick={() => fileRef.current.click()}
                   title="Change photo"
                 >
-                  ✏
+                  ✎
                 </button>
               </div>
 
@@ -450,6 +420,64 @@ function Profile() {
                   </div>
                 </div>
               </div>
+            </div>
+
+            {/* Profile Picture Section */}
+            <div className="profile-section">
+              <p className="profile-section-title">Profile Picture</p>
+
+              {/* Hidden file input */}
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/*"
+                style={{ display: "none" }}
+                onChange={handleFileChange}
+              />
+
+              {/* Message */}
+              {message && (
+                <div className={`msg-box ${isSuccess ? "success" : "error"}`}>
+                  <span>{isSuccess ? "✓" : "⚠"}</span>
+                  {displayMsg}
+                </div>
+              )}
+
+              {/* Preview */}
+              {preview ? (
+                <>
+                  <div className="preview-wrap">
+                    <img src={preview} alt="Preview" className="preview-img" />
+                    <div className="preview-info">
+                      <p>New photo selected</p>
+                      <span>Click save to update your profile picture</span>
+                    </div>
+                    <button
+                      className="preview-remove"
+                      onClick={() => {
+                        setPreview(null);
+                        fileRef.current.value = "";
+                      }}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                  <button
+                    className="upload-btn"
+                    onClick={handleUpload}
+                    disabled={uploading}
+                  >
+                    {uploading ? "Uploading..." : "💾 Save Profile Picture"}
+                  </button>
+                </>
+              ) : (
+                <button
+                  className="change-photo-btn"
+                  onClick={() => fileRef.current.click()}
+                >
+                  📷 Change Profile Photo
+                </button>
+              )}
             </div>
           </div>
         </div>
