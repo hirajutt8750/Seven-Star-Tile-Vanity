@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { getProducts } from "../api/products";
 import { getOrders } from "../api/orders";
 import { getMessages } from "../api/messages";
@@ -11,6 +12,7 @@ function Dashboard() {
   const [unreadMessages, setUnreadMessages] = useState(0);
   const [recentOrders, setRecentOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadStats();
@@ -133,8 +135,41 @@ function Dashboard() {
       }}
     >
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Syne:wght@700;800&display=swap');
         * { box-sizing: border-box; }
+
+        .welcome-line {
+          font-family: 'Inter', sans-serif;
+          font-size: 14px;
+          font-weight: 600;
+          color: rgba(0,229,255,0.6);
+          letter-spacing: 3px;
+          text-transform: uppercase;
+          margin: 0 0 10px;
+        }
+
+        .welcome-heading {
+          margin: 0 0 6px;
+          font-family: 'Syne', 'Inter', sans-serif;
+          font-size: 42px;
+          font-weight: 800;
+          color: #fff;
+          line-height: 1.1;
+          letter-spacing: -1px;
+        }
+
+        .welcome-name {
+          background: linear-gradient(90deg, #00E5FF, #448AFF, #00E5FF);
+          background-size: 200% auto;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          animation: shimmer 3s linear infinite;
+          font-style: italic;
+        }
+
+        @keyframes shimmer {
+          to { background-position: 200% center; }
+        }
 
         .stat-card {
           position: relative;
@@ -202,6 +237,7 @@ function Dashboard() {
           padding: 6px 14px;
           border-radius: 20px;
           transition: background 0.2s;
+          font-family: inherit;
         }
         .view-all-btn:hover {
           background: rgba(0,229,255,0.16);
@@ -210,25 +246,11 @@ function Dashboard() {
 
       {/* Header */}
       <div style={{ marginBottom: "28px" }}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "6px",
-            marginBottom: "6px",
-          }}
-        ></div>
-        <h1
-          style={{
-            margin: 0,
-            fontSize: "26px",
-            color: "#FFFFFF",
-            fontWeight: 800,
-          }}
-        >
-          Welcome back, <span style={{ color: "#00E5FF" }}>Saad Bin Saeed</span>
+        <p className="welcome-line">👋 Good to see you</p>
+        <h1 className="welcome-heading">
+          Welcome back, <span className="welcome-name">Saad Bin Saeed</span>
         </h1>
-        <p style={{ margin: "4px 0 0", color: "#3A5A7A", fontSize: "14px" }}>
+        <p style={{ margin: "6px 0 0", color: "#3A5A7A", fontSize: "14px" }}>
           Here's your store performance at a glance.
         </p>
       </div>
@@ -425,7 +447,12 @@ function Dashboard() {
               }}
             />
           </div>
-          <span className="view-all-btn">View all →</span>
+          <button
+            className="view-all-btn"
+            onClick={() => navigate("/admin/orders")}
+          >
+            View all →
+          </button>
         </div>
 
         <div
