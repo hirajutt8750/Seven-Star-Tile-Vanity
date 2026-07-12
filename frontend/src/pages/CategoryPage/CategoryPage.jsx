@@ -7,23 +7,62 @@ import Footer from "../../components/Footer/Footer";
 import WhatsAppButton from "../../components/WhatsAppButton/WhatsAppButton";
 import "./CategoryPage.css";
 
+const API = "https://seven-star-tile-vanity.onrender.com";
+
+function StarRating({ rating, count }) {
+  if (!rating) return null;
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "5px",
+        margin: "6px 0",
+      }}
+    >
+      <span
+        style={{ color: "#d4af37", fontSize: "13px", letterSpacing: "1px" }}
+      >
+        {"★".repeat(Math.round(rating))}
+        {"☆".repeat(5 - Math.round(rating))}
+      </span>
+      <span style={{ fontSize: "12px", color: "#888" }}>
+        {rating} ({count})
+      </span>
+    </div>
+  );
+}
+
 function CategoryPage() {
   const { categoryName } = useParams();
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [added, setAdded] = useState({});
+  const [ratings, setRatings] = useState({});
   const { addToCart } = useCart();
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    fetch(
-      `https://seven-star-tile-vanity.onrender.com/api/products?category=${encodeURIComponent(categoryName)}`,
-    )
+    fetch(`${API}/api/products?category=${encodeURIComponent(categoryName)}`)
       .then((res) => res.json())
       .then((data) => {
         setProducts(data);
         setLoading(false);
+        // Fetch ratings for each product
+        data.forEach((product) => {
+          fetch(`${API}/api/reviews/product/${product._id}`)
+            .then((r) => r.json())
+            .then((rev) => {
+              if (rev.count > 0) {
+                setRatings((prev) => ({
+                  ...prev,
+                  [product._id]: { avg: rev.averageRating, count: rev.count },
+                }));
+              }
+            })
+            .catch(() => {});
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -117,6 +156,15 @@ function CategoryPage() {
                     )}
                   </div>
                   <h3 className="category-card-name">{product.name}</h3>
+
+                  {/* Star Rating */}
+                  {ratings[product._id] && (
+                    <StarRating
+                      rating={ratings[product._id].avg}
+                      count={ratings[product._id].count}
+                    />
+                  )}
+
                   <p className="category-card-desc">{product.description}</p>
 
                   <div className="category-card-footer">
@@ -134,9 +182,7 @@ function CategoryPage() {
                   <div className="category-card-btns">
                     {product.isCustom ? (
                       <a
-                        href={`https://wa.me/923237429771?text=${encodeURIComponent(
-                          `Hello, I am interested in ${product.name}`,
-                        )}`}
+                        href={`https://wa.me/923237429771?text=${encodeURIComponent(`Hello, I am interested in ${product.name}`)}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="category-whatsapp-btn"

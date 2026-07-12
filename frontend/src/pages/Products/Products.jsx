@@ -8,21 +8,62 @@ import Footer from "../../components/Footer/Footer";
 import WhatsAppButton from "../../components/WhatsAppButton/WhatsAppButton";
 import "./Products.css";
 
+const API = "https://seven-star-tile-vanity.onrender.com";
+
+function StarRating({ rating, count }) {
+  if (!rating) return null;
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "5px",
+        margin: "4px 0 6px",
+      }}
+    >
+      <span
+        style={{ color: "#d4af37", fontSize: "13px", letterSpacing: "1px" }}
+      >
+        {"★".repeat(Math.round(rating))}
+        {"☆".repeat(5 - Math.round(rating))}
+      </span>
+      <span style={{ fontSize: "12px", color: "#666" }}>
+        {rating} ({count})
+      </span>
+    </div>
+  );
+}
+
 function Products() {
   const [products, setProducts] = useState([]);
   const [filter, setFilter] = useState("All");
   const [added, setAdded] = useState({});
   const [loading, setLoading] = useState(true);
   const [currentImages, setCurrentImages] = useState({});
+  const [ratings, setRatings] = useState({});
   const { addToCart } = useCart();
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("https://seven-star-tile-vanity.onrender.com/api/products")
+    fetch(`${API}/api/products`)
       .then((res) => res.json())
       .then((data) => {
         setProducts(data);
         setLoading(false);
+        // Fetch ratings for each product
+        data.forEach((product) => {
+          fetch(`${API}/api/reviews/product/${product._id}`)
+            .then((r) => r.json())
+            .then((rev) => {
+              if (rev.count > 0) {
+                setRatings((prev) => ({
+                  ...prev,
+                  [product._id]: { avg: rev.averageRating, count: rev.count },
+                }));
+              }
+            })
+            .catch(() => {});
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -31,7 +72,6 @@ function Products() {
   }, []);
 
   const categories = ["All", ...new Set(products.map((p) => p.category))];
-
   const filtered =
     filter === "All" ? products : products.filter((p) => p.category === filter);
 
@@ -53,7 +93,6 @@ function Products() {
   const handleBuyNow = (product, currentIndex) => {
     const hasImages = product.images && product.images.length > 0;
     const imageUrl = hasImages ? product.images[currentIndex] : null;
-
     navigate("/order", {
       state: {
         selectedProduct: {
@@ -203,7 +242,6 @@ function Products() {
                       >
                         ›
                       </button>
-
                       <div
                         style={{
                           position: "absolute",
@@ -251,6 +289,15 @@ function Products() {
                     <span className="product-finish">{product.finish}</span>
                   </div>
                   <h3 className="product-name">{product.name}</h3>
+
+                  {/* Star Rating */}
+                  {ratings[product._id] && (
+                    <StarRating
+                      rating={ratings[product._id].avg}
+                      count={ratings[product._id].count}
+                    />
+                  )}
+
                   <p className="product-desc">{product.description}</p>
                   <div className="product-details">
                     <span>📐 Size: {product.size}</span>
@@ -269,9 +316,7 @@ function Products() {
                   <div className="product-btn-row">
                     {product.isCustom ? (
                       <a
-                        href={`https://wa.me/923237429771?text=${encodeURIComponent(
-                          `Hello, I am interested in ${product.name}`,
-                        )}`}
+                        href={`https://wa.me/923237429771?text=${encodeURIComponent(`Hello, I am interested in ${product.name}`)}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="category-whatsapp-btn"
@@ -281,9 +326,7 @@ function Products() {
                     ) : (
                       <>
                         <button
-                          className={`product-cart-btn ${
-                            added[product._id] ? "added" : ""
-                          }`}
+                          className={`product-cart-btn ${added[product._id] ? "added" : ""}`}
                           onClick={() => handleAddToCart(product)}
                         >
                           {added[product._id] ? "✓ Added!" : "Add to Cart"}
