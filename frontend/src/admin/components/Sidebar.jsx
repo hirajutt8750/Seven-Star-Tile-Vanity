@@ -21,9 +21,9 @@ function Sidebar({ isOpen, onClose }) {
     { path: "/admin/products", label: "Products", icon: "📦" },
     { path: "/admin/orders", label: "Orders", icon: "🧾" },
     { path: "/admin/messages", label: "Messages", icon: "✉️" },
+    { path: "/admin/reviews", label: "Customer Reviews", icon: "⭐" },
     { path: "/admin/audit-logs", label: "Audit Logs", icon: "📋" },
     { path: "/admin/2fa-setup", label: "2FA Setup", icon: "🔐" },
-    { path: "/admin/reviews", label: "Customer Reviews", icon: "⭐" },
   ];
 
   return (
