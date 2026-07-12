@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { getProducts } from "../api/products";
 import { getOrders } from "../api/orders";
 import { getMessages } from "../api/messages";
+import { getReviews } from "../api/reviews";
 
 function Dashboard() {
   const [totalProducts, setTotalProducts] = useState(0);
@@ -10,6 +11,7 @@ function Dashboard() {
   const [pendingOrders, setPendingOrders] = useState(0);
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [unreadMessages, setUnreadMessages] = useState(0);
+  const [pendingReviews, setPendingReviews] = useState(0);
   const [recentOrders, setRecentOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -23,6 +25,7 @@ function Dashboard() {
       const products = await getProducts();
       const orders = await getOrders();
       const messages = await getMessages();
+      const reviews = await getReviews("pending");
 
       setTotalProducts(products.length);
       setTotalOrders(orders.length);
@@ -39,6 +42,8 @@ function Dashboard() {
 
       const unread = messages.filter((m) => !m.isRead).length;
       setUnreadMessages(unread);
+
+      setPendingReviews(Array.isArray(reviews) ? reviews.length : 0);
     } catch (error) {
       console.error("Failed to load dashboard stats:", error);
     } finally {
@@ -111,6 +116,13 @@ function Dashboard() {
       accent: unreadMessages > 0 ? "#FF5252" : "#00E5FF",
       sub: unreadMessages > 0 ? "New messages!" : "All caught up",
     },
+    {
+      label: "Pending Reviews",
+      value: pendingReviews,
+      icon: "⭐",
+      accent: pendingReviews > 0 ? "#FFD700" : "#00E5FF",
+      sub: pendingReviews > 0 ? "Awaiting approval" : "All reviewed",
+    },
   ];
 
   const accentRgb = (hex) => {
@@ -120,6 +132,7 @@ function Dashboard() {
       "#FFC107": "255,193,7",
       "#69FF47": "105,255,71",
       "#FF5252": "255,82,82",
+      "#FFD700": "255,215,0",
     };
     return map[hex] || "0,229,255";
   };
@@ -140,22 +153,22 @@ function Dashboard() {
 
         .welcome-line {
           font-family: 'Inter', sans-serif;
-          font-size: 14px;
+          font-size: 12px;
           font-weight: 600;
           color: rgba(0,229,255,0.6);
           letter-spacing: 3px;
           text-transform: uppercase;
-          margin: 0 0 10px;
+          margin: 0 0 8px;
         }
 
         .welcome-heading {
           margin: 0 0 6px;
           font-family: 'Syne', 'Inter', sans-serif;
-          font-size: 42px;
+          font-size: 30px;
           font-weight: 800;
           color: #fff;
-          line-height: 1.1;
-          letter-spacing: -1px;
+          line-height: 1.2;
+          letter-spacing: -0.5px;
         }
 
         .welcome-name {
