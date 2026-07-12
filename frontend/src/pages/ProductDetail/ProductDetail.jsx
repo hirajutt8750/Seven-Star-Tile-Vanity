@@ -414,17 +414,6 @@ function ProductDetail() {
                 <button onClick={handleBuyNow} className="detail-buy-btn">
                   Buy Now
                 </button>
-
-                <a
-                  href={`https://wa.me/923237429771?text=${encodeURIComponent(
-                    `Hello, I am interested in ${product.name}`,
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="detail-whatsapp-btn"
-                >
-                  💬 WhatsApp Us
-                </a>
               </>
             )}
 
