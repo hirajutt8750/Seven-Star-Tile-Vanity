@@ -164,7 +164,7 @@ function Dashboard() {
         .welcome-heading {
           margin: 0 0 6px;
           font-family: 'Syne', 'Inter', sans-serif;
-          font-size: 30px;
+          font-size: 28px;
           font-weight: 800;
           color: #fff;
           line-height: 1.2;
