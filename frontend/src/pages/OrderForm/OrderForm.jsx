@@ -241,7 +241,7 @@ ${cartSummary}
 📝 *Special Notes:* ${formData.specialNotes || "None"}
         `.trim();
       } else {
-        // Buy Now se aaya — product details dikhao
+        // Buy Now se aaya — product details + price dikhao
         whatsappMessage = `
 🛒 *New Order Request - 7Star Tile Vanity*
 
@@ -260,6 +260,7 @@ ${cartSummary}
   Finish: ${formData.finish || "N/A"}
   Design: ${formData.design || "N/A"}
   Quantity: ${formData.quantity || "N/A"}
+  Price: ${selectedProduct?.price ? `Rs. ${selectedProduct.price.toLocaleString()}` : "To be confirmed"}
 
 🚚 *Delivery Details:*
   Method: ${formData.deliveryMethod === "home" ? "Home Delivery" : "Factory Pickup"}
