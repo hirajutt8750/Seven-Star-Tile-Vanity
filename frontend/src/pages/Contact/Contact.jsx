@@ -84,24 +84,27 @@ function Contact() {
           {/* MEET THE OWNER SECTION */}
           <div className="owner-card">
             <div className="owner-photo-wrap">
-              <img
-                src={ownerPhoto}
-                alt="Saad Bin Saeed - Owner, Seven Star Tile Vanity"
-                className="owner-photo"
-              />
+              <div className="owner-photo-inner">
+                <img
+                  src={ownerPhoto}
+                  alt="Saad Bin Saeed - Owner, Seven Star Tile Vanity"
+                  className="owner-photo"
+                />
+              </div>
             </div>
             <div className="owner-info">
-              <span className="owner-label">Meet the Owner</span>
-              <h3 className="owner-name">Saad Bin Saeed</h3>
+              <span className="owner-quote-mark">"</span>
+              <span className="owner-label">The Owner</span>
+              <h2 className="owner-name">Saad Bin Saeed</h2>
+              <div className="owner-divider"></div>
               <p className="owner-role">Owner &amp; Manager</p>
+              <p className="owner-quote">
+                We respond within one hour on WhatsApp. Every custom order is
+                personally overseen from design to delivery.
+              </p>
               <div className="owner-status">
                 <span className="status-dot"></span>
-                Available now
-              </div>
-              <div className="owner-quote-wrap">
-                <p className="owner-quote">
-                  "We respond within 1 hour on WhatsApp. Custom orders welcome!"
-                </p>
+                Available Now
               </div>
             </div>
           </div>

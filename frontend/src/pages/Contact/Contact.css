@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&display=swap");
+
 /* ================= HERO ================= */
 .contact-hero {
   background:
@@ -59,90 +61,121 @@
   margin: 0 auto;
 }
 
-/* ================= MEET THE OWNER ================= */
+/* ================= MEET THE OWNER (LUXURY) ================= */
 .owner-card {
-  background: #1a1a1a;
-  border-radius: 14px;
-  padding: 28px;
+  background: linear-gradient(135deg, #161616 0%, #1c1a14 100%);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: 6px;
   display: flex;
-  align-items: center;
-  gap: 28px;
-  margin-bottom: 36px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+  flex-direction: column;
+  overflow: hidden;
+  margin-bottom: 40px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
   animation: slideUp 1s ease both;
 }
 
 .owner-photo-wrap {
-  flex-shrink: 0;
-  width: 120px;
-  height: 120px;
-  border-radius: 14px;
-  border: 2px solid #d4af37;
-  overflow: hidden;
-  background: #222;
+  padding: 20px 20px 0;
+}
+
+.owner-photo-inner {
+  width: 100%;
+  height: 220px;
+  border: 1px solid #d4af37;
+  padding: 6px;
+  box-sizing: border-box;
 }
 
 .owner-photo {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
+  object-position: center 20%;
   display: block;
+  image-rendering: -webkit-optimize-contrast;
+  backface-visibility: hidden;
+}
+
+.owner-info {
+  flex: 1;
+  padding: 28px 26px 32px;
+  position: relative;
+}
+
+.owner-quote-mark {
+  position: absolute;
+  top: 6px;
+  right: 22px;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 56px;
+  color: rgba(212, 175, 55, 0.15);
+  line-height: 1;
+  user-select: none;
 }
 
 .owner-label {
   display: block;
-  font-size: 11px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 3.5px;
   color: #d4af37;
-  font-weight: 700;
-  margin-bottom: 8px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  font-family: "Helvetica Neue", Arial, sans-serif;
 }
 
 .owner-name {
-  font-size: 24px;
-  font-weight: 700;
-  color: #fff;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 26px;
+  font-weight: 500;
+  color: #f5f2e8;
   margin: 0 0 4px;
+  letter-spacing: 0.3px;
+}
+
+.owner-divider {
+  width: 36px;
+  height: 1px;
+  background: #d4af37;
+  margin: 12px 0 12px;
 }
 
 .owner-role {
-  font-size: 14px;
-  color: #999;
-  margin: 0 0 12px;
+  font-size: 11px;
+  color: #a8a294;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  margin: 0 0 16px;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
+.owner-quote {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 15px;
+  color: #c9c4b8;
+  font-style: italic;
+  line-height: 1.75;
+  margin: 0 0 18px;
+  max-width: 480px;
 }
 
 .owner-status {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
-  color: #4caf50;
-  font-weight: 500;
-  margin-bottom: 14px;
+  font-size: 10.5px;
+  color: #8fbf8f;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-family: "Helvetica Neue", Arial, sans-serif;
 }
 
 .status-dot {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: #4caf50;
   display: inline-block;
-  box-shadow: 0 0 6px #4caf50;
-}
-
-.owner-quote-wrap {
-  border-left: 3px solid #d4af37;
-  padding-left: 14px;
-}
-
-.owner-quote {
-  font-size: 14px;
-  color: #ccc;
-  font-style: italic;
-  margin: 0;
-  line-height: 1.6;
+  box-shadow: 0 0 8px #4caf50;
 }
 
 /* ================= CONTAINER ================= */
@@ -454,24 +487,35 @@
   .contact-form-box {
     padding: 32px 36px;
   }
+  .owner-card {
+    flex-direction: row;
+  }
+  .owner-photo-wrap {
+    width: 220px;
+    flex-shrink: 0;
+    padding: 20px;
+  }
+  .owner-photo-inner {
+    height: 260px;
+  }
+  .owner-info {
+    padding: 34px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
 }
 
 /* ================= MOBILE: OWNER CARD STACK ================= */
 @media (max-width: 480px) {
-  .owner-card {
-    flex-direction: column;
-    text-align: center;
-    padding: 22px;
+  .owner-photo-inner {
+    height: 300px;
   }
-  .owner-photo-wrap {
-    width: 100px;
-    height: 100px;
+  .owner-quote-mark {
+    display: none;
   }
-  .owner-quote-wrap {
-    border-left: none;
-    border-top: 3px solid #d4af37;
-    padding-left: 0;
-    padding-top: 10px;
+  .owner-info {
+    padding: 24px 22px 28px;
   }
 }
 
