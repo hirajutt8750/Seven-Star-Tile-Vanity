@@ -8,6 +8,7 @@ import WhatsAppButton from "../../components/WhatsAppButton/WhatsAppButton";
 import "./CategoryPage.css";
 
 const API = "https://seven-star-tile-vanity.onrender.com";
+const SITE_URL = "https://www.7startilevanity.com";
 
 function StarRating({ rating, count }) {
   if (!rating) return null;
@@ -99,6 +100,8 @@ function CategoryPage() {
     });
   };
 
+  const canonicalUrl = `${SITE_URL}/category/${encodeURIComponent(categoryName)}`;
+
   return (
     <div className="category-page">
       <Helmet>
@@ -107,6 +110,7 @@ function CategoryPage() {
           name="description"
           content={`Explore our ${categoryName} collection — premium quality, factory-direct vanities. Custom sizes, designs and colors available worldwide.`}
         />
+        <link rel="canonical" href={canonicalUrl} />
       </Helmet>
       <Navbar />
 
