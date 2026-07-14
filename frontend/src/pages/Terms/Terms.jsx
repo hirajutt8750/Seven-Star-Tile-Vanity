@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
+import { Helmet } from "react-helmet";
 import Navbar from "../../components/Navbar/Navbar";
 import BackButton from "../../components/BackButton/BackButton";
 import Footer from "../../components/Footer/Footer";
@@ -36,6 +37,17 @@ function Terms() {
 
   return (
     <div className="policies-page">
+      <Helmet>
+        <title>
+          Terms, Privacy &amp; Return Policy | Seven Star Tile Vanity
+        </title>
+        <meta
+          name="description"
+          content="Read Seven Star Tile Vanity's terms of service, privacy policy, and 7-day return policy before placing your order for custom tiles and vanities."
+        />
+        <link rel="canonical" href="https://www.7startilevanity.com/terms" />
+      </Helmet>
+
       <Navbar />
 
       {/* ── HERO ── */}
@@ -180,6 +192,32 @@ function Terms() {
                 </p>
               </div>
             </div>
+
+            <div className="p-section fade-in delay-2">
+              <div className="p-section-num">07</div>
+              <div className="p-section-body">
+                <h3>Intellectual Property</h3>
+                <p>
+                  All content on this website, including product photography,
+                  designs, logos, and written material, is the property of Seven
+                  Star Tile Vanity and may not be copied or reproduced without
+                  prior written permission.
+                </p>
+              </div>
+            </div>
+
+            <div className="p-section fade-in">
+              <div className="p-section-num">08</div>
+              <div className="p-section-body">
+                <h3>Governing Law</h3>
+                <p>
+                  These terms are governed by the laws of Pakistan. Any disputes
+                  arising from an order or transaction will first be addressed
+                  through direct communication with our team before any other
+                  action is taken.
+                </p>
+              </div>
+            </div>
           </div>
         )}
 
@@ -249,6 +287,19 @@ function Terms() {
 
             <div className="p-section fade-in delay-1">
               <div className="p-section-num">05</div>
+              <div className="p-section-body">
+                <h3>Data Retention</h3>
+                <p>
+                  We retain your order information only for as long as necessary
+                  to fulfil your order and provide after-sales support. You may
+                  request that we delete your information at any time by
+                  contacting us on WhatsApp.
+                </p>
+              </div>
+            </div>
+
+            <div className="p-section fade-in delay-2">
+              <div className="p-section-num">06</div>
               <div className="p-section-body">
                 <h3>Contact Us</h3>
                 <p>
