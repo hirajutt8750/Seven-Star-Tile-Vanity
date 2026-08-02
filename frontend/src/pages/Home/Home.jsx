@@ -138,10 +138,7 @@ function Home() {
               >
                 <div className="h-prod-img">
                   {cat.image ? (
-                    <img
-                      src={`https://seven-star-tile-vanity.onrender.com${cat.image}`}
-                      alt={cat.name}
-                    />
+                    <img src={cat.image} alt={cat.name} />
                   ) : (
                     <span className="h-prod-placeholder">🎨</span>
                   )}
