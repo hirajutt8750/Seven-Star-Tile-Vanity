@@ -390,7 +390,7 @@ function Categories() {
               )}
               {image && (
                 <img
-                  src={`https://seven-star-tile-vanity.onrender.com${image}`}
+                  src={image}
                   alt="preview"
                   style={{
                     width: "100px",
@@ -452,7 +452,7 @@ function Categories() {
               >
                 {category.image ? (
                   <img
-                    src={`https://seven-star-tile-vanity.onrender.com${category.image}`}
+                    src={category.image}
                     alt={category.name}
                     style={{
                       width: "100%",
