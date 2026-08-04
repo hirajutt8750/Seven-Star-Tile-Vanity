@@ -9,7 +9,7 @@ const {
 } = require("../controllers/productController");
 const { protect } = require("../middleware/auth");
 const { validateProduct } = require("../middleware/validate");
-const { upload } = require("../middleware/upload"); // ✅ import karein
+const { upload } = require("../utils/cloudinary");
 
 router.get("/", getAllProducts);
 router.get("/:id", getProductById);
