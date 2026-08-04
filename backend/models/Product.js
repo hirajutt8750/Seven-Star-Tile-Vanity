@@ -11,7 +11,10 @@ const productSchema = new mongoose.Schema({
   },
   price: {
     type: Number,
-    required: true,
+    required: function () {
+      return !this.isCustom; // ✅ Custom product ho to price required nahi
+    },
+    default: 0,
   },
   category: {
     type: String,
