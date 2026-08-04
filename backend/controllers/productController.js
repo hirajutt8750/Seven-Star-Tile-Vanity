@@ -28,6 +28,8 @@ const getProductById = async (req, res) => {
 
 const createProduct = async (req, res) => {
   try {
+    console.log("REQ BODY:", req.body); // ✅ yeh add karo
+    console.log("REQ FILES:", req.files); // ✅ yeh add karo
     // ✅ Cloudinary se uploaded images ke URLs nikalo
     const imageUrls = req.files?.map((file) => file.path) || [];
 
