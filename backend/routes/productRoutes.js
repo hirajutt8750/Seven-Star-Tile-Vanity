@@ -9,11 +9,24 @@ const {
 } = require("../controllers/productController");
 const { protect } = require("../middleware/auth");
 const { validateProduct } = require("../middleware/validate");
+const { upload } = require("../middleware/upload"); // ✅ import karein
 
 router.get("/", getAllProducts);
 router.get("/:id", getProductById);
-router.post("/", protect, validateProduct, createProduct);
-router.put("/:id", protect, validateProduct, updateProduct);
+router.post(
+  "/",
+  protect,
+  upload.array("images", 20),
+  validateProduct,
+  createProduct,
+); // ✅ upload add kiya
+router.put(
+  "/:id",
+  protect,
+  upload.array("images", 20),
+  validateProduct,
+  updateProduct,
+); // ✅ upload add kiya
 router.delete("/:id", protect, deleteProduct);
 
 module.exports = router;
