@@ -8,12 +8,13 @@ import {
 import axios from "axios";
 import { getCategories } from "../api/categories";
 
-// Theme colors
 const COLORS = {
   background: "#0A0F1E",
   card: "#0D1B2E",
   cyan: "#00E5FF",
   red: "#FF5252",
+  green: "#4CAF50",
+  yellow: "#FFC107",
   text: "#E6F1FF",
   muted: "#8AA0BF",
   border: "#1E3A5F",
@@ -23,6 +24,7 @@ const COLORS = {
 function Products() {
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
+  const [filterCategory, setFilterCategory] = useState("All");
   const [showForm, setShowForm] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
   const [images, setImages] = useState([]);
@@ -115,6 +117,7 @@ function Products() {
       images: product.images || [],
     });
     setShowForm(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleDelete = async (id) => {
@@ -130,7 +133,18 @@ function Products() {
     setFormData((prev) => ({ ...prev, images: newImages }));
   };
 
-  // Shared input style
+  // Filter products by category
+  const filteredProducts =
+    filterCategory === "All"
+      ? products
+      : products.filter((p) => p.category === filterCategory);
+
+  // Get unique categories from products
+  const productCategories = [
+    "All",
+    ...new Set(products.map((p) => p.category).filter(Boolean)),
+  ];
+
   const inputStyle = {
     padding: "12px 14px",
     borderRadius: "8px",
@@ -141,6 +155,7 @@ function Products() {
     outline: "none",
     width: "100%",
     boxSizing: "border-box",
+    fontFamily: "Inter, system-ui, sans-serif",
   };
 
   return (
@@ -157,6 +172,37 @@ function Products() {
       <style>{`
         .desktop-table { display: table; }
         .mobile-cards { display: none; }
+
+        .filter-tab {
+          padding: 8px 18px;
+          border-radius: 20px;
+          border: 1px solid ${COLORS.border};
+          background: transparent;
+          color: ${COLORS.muted};
+          font-size: 13px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s;
+          font-family: Inter, system-ui, sans-serif;
+          white-space: nowrap;
+        }
+        .filter-tab:hover {
+          border-color: ${COLORS.cyan};
+          color: ${COLORS.cyan};
+        }
+        .filter-tab.active {
+          background: ${COLORS.cyan}22;
+          border-color: ${COLORS.cyan};
+          color: ${COLORS.cyan};
+        }
+
+        .prod-table-row {
+          border-bottom: 1px solid ${COLORS.border};
+          transition: background 0.15s ease;
+        }
+        .prod-table-row:hover {
+          background: #102742 !important;
+        }
 
         .product-card {
           background: ${COLORS.card};
@@ -184,25 +230,18 @@ function Products() {
 
         @media (max-width: 768px) {
           .products-page { padding: 16px !important; }
-
           .products-header {
             flex-direction: column !important;
             align-items: stretch !important;
             gap: 14px !important;
           }
           .products-header button { width: 100%; }
-
-          .form-grid {
-            grid-template-columns: 1fr !important;
-          }
-
-          .form-action-buttons {
-            flex-direction: column !important;
-          }
+          .form-grid { grid-template-columns: 1fr !important; }
+          .form-action-buttons { flex-direction: column !important; }
           .form-action-buttons button { width: 100%; }
-
           .desktop-table { display: none !important; }
           .mobile-cards { display: block !important; }
+          .filter-tabs { overflow-x: auto; padding-bottom: 6px; }
         }
       `}</style>
 
@@ -213,14 +252,24 @@ function Products() {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: "24px",
+          marginBottom: "20px",
         }}
       >
-        <h1 style={{ margin: 0, fontSize: "26px", fontWeight: "700" }}>
-          Products
-        </h1>
+        <div>
+          <h1 style={{ margin: 0, fontSize: "26px", fontWeight: "700" }}>
+            Products
+          </h1>
+          <p
+            style={{ margin: "4px 0 0", color: COLORS.muted, fontSize: "13px" }}
+          >
+            {products.length} total products
+          </p>
+        </div>
         <button
-          onClick={() => setShowForm(true)}
+          onClick={() => {
+            setShowForm(true);
+            setEditProduct(null);
+          }}
           style={{
             background: COLORS.cyan,
             color: "#04141C",
@@ -231,13 +280,48 @@ function Products() {
             fontWeight: "700",
             fontSize: "14px",
             boxShadow: `0 0 14px ${COLORS.cyan}55`,
-            transition: "transform 0.15s ease",
           }}
-          onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.97)")}
-          onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
         >
           + Add Product
         </button>
+      </div>
+
+      {/* Category Filter Tabs */}
+      <div
+        className="filter-tabs"
+        style={{
+          display: "flex",
+          gap: "8px",
+          marginBottom: "20px",
+          flexWrap: "wrap",
+        }}
+      >
+        {productCategories.map((cat) => (
+          <button
+            key={cat}
+            className={`filter-tab ${filterCategory === cat ? "active" : ""}`}
+            onClick={() => setFilterCategory(cat)}
+          >
+            {cat}
+            <span
+              style={{
+                marginLeft: "6px",
+                background:
+                  filterCategory === cat
+                    ? `${COLORS.cyan}33`
+                    : `${COLORS.border}`,
+                color: filterCategory === cat ? COLORS.cyan : COLORS.muted,
+                padding: "1px 7px",
+                borderRadius: "10px",
+                fontSize: "11px",
+              }}
+            >
+              {cat === "All"
+                ? products.length
+                : products.filter((p) => p.category === cat).length}
+            </span>
+          </button>
+        ))}
       </div>
 
       {/* Form */}
@@ -247,20 +331,20 @@ function Products() {
             background: COLORS.card,
             padding: "24px",
             borderRadius: "14px",
-            margin: "20px 0",
+            margin: "0 0 24px",
             border: `1px solid ${COLORS.border}`,
             boxShadow: "0 8px 24px rgba(0,0,0,0.4)",
           }}
         >
           <h2
             style={{
-              margin: "0 0 18px 0",
-              fontSize: "20px",
+              margin: "0 0 18px",
+              fontSize: "18px",
               borderLeft: `4px solid ${COLORS.cyan}`,
               paddingLeft: "10px",
             }}
           >
-            {editProduct ? "Edit Product" : "Add New Product"}
+            {editProduct ? "✏ Edit Product" : "➕ Add New Product"}
           </h2>
 
           <form onSubmit={handleSubmit}>
@@ -279,8 +363,8 @@ function Products() {
                   setFormData({ ...formData, name: e.target.value })
                 }
                 style={inputStyle}
+                required
               />
-
               <input
                 placeholder="Price (leave 0 for custom)"
                 type="number"
@@ -290,8 +374,6 @@ function Products() {
                 }
                 style={inputStyle}
               />
-
-              {/* Category Dropdown */}
               <select
                 value={formData.category}
                 onChange={(e) =>
@@ -307,7 +389,6 @@ function Products() {
                 ))}
                 <option value="Custom Order">Custom Order</option>
               </select>
-
               <input
                 placeholder='Size (32", 36", 48"...)'
                 value={formData.size}
@@ -316,7 +397,6 @@ function Products() {
                 }
                 style={inputStyle}
               />
-
               <input
                 placeholder="Finish (Glossy, Matte...)"
                 value={formData.finish}
@@ -325,7 +405,6 @@ function Products() {
                 }
                 style={inputStyle}
               />
-
               <input
                 placeholder="Stock quantity"
                 type="number"
@@ -352,7 +431,6 @@ function Products() {
               }}
             />
 
-            {/* Custom Order Checkbox */}
             <div
               style={{
                 margin: "16px 0",
@@ -377,7 +455,6 @@ function Products() {
                   height: "18px",
                   cursor: "pointer",
                   accentColor: COLORS.cyan,
-                  flexShrink: 0,
                 }}
               />
               <label
@@ -386,15 +463,12 @@ function Products() {
                   fontSize: "14px",
                   cursor: "pointer",
                   fontWeight: "500",
-                  color: COLORS.text,
                 }}
               >
-                This is a Custom Order product (price will show as "Call for
-                Price")
+                Custom Order product (price shows as "Call for Price")
               </label>
             </div>
 
-            {/* Image Upload */}
             <div style={{ margin: "16px 0" }}>
               <label
                 style={{
@@ -418,7 +492,6 @@ function Products() {
                   display: "block",
                   margin: "8px 0",
                   color: COLORS.muted,
-                  maxWidth: "100%",
                 }}
               />
               {uploading && (
@@ -426,7 +499,6 @@ function Products() {
                   Uploading...
                 </p>
               )}
-
               <div
                 style={{
                   display: "flex",
@@ -465,7 +537,6 @@ function Products() {
                         cursor: "pointer",
                         fontSize: "13px",
                         fontWeight: "bold",
-                        boxShadow: "0 2px 6px rgba(0,0,0,0.4)",
                       }}
                     >
                       ×
@@ -489,7 +560,6 @@ function Products() {
                   borderRadius: "8px",
                   cursor: "pointer",
                   fontWeight: "700",
-                  boxShadow: `0 0 12px ${COLORS.cyan}55`,
                 }}
               >
                 {editProduct ? "Update" : "Save"}
@@ -514,14 +584,30 @@ function Products() {
         </div>
       )}
 
-      {/* ===== DESKTOP: Products Table ===== */}
+      {/* Results count */}
+      <div
+        style={{ marginBottom: "12px", color: COLORS.muted, fontSize: "13px" }}
+      >
+        Showing{" "}
+        <span style={{ color: COLORS.cyan, fontWeight: 600 }}>
+          {filteredProducts.length}
+        </span>{" "}
+        products
+        {filterCategory !== "All" && (
+          <span>
+            {" "}
+            in <span style={{ color: "#fff" }}>{filterCategory}</span>
+          </span>
+        )}
+      </div>
+
+      {/* DESKTOP Table */}
       <div
         style={{
           background: COLORS.card,
           borderRadius: "14px",
           overflow: "hidden",
           border: `1px solid ${COLORS.border}`,
-          marginTop: "20px",
         }}
       >
         <table
@@ -529,266 +615,338 @@ function Products() {
           style={{ width: "100%", borderCollapse: "collapse" }}
         >
           <thead>
-            <tr
-              style={{
-                background: COLORS.inputBg,
-                color: COLORS.cyan,
-                textTransform: "uppercase",
-                fontSize: "12px",
-                letterSpacing: "0.5px",
-              }}
-            >
-              <th style={{ padding: "14px", textAlign: "left" }}>Image</th>
-              <th style={{ padding: "14px", textAlign: "left" }}>Name</th>
-              <th style={{ padding: "14px", textAlign: "left" }}>Category</th>
-              <th style={{ padding: "14px", textAlign: "left" }}>Price</th>
-              <th style={{ padding: "14px", textAlign: "left" }}>Stock</th>
-              <th style={{ padding: "14px", textAlign: "left" }}>Custom</th>
-              <th style={{ padding: "14px", textAlign: "left" }}>Actions</th>
+            <tr style={{ background: COLORS.inputBg }}>
+              {[
+                "Image",
+                "Name",
+                "Category",
+                "Price",
+                "Stock",
+                "Custom",
+                "Actions",
+              ].map((h) => (
+                <th
+                  key={h}
+                  style={{
+                    padding: "14px 12px",
+                    textAlign: "left",
+                    color: COLORS.cyan,
+                    fontSize: "11px",
+                    fontWeight: "700",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.8px",
+                  }}
+                >
+                  {h}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
-            {products.map((product) => (
-              <tr
-                key={product._id}
-                style={{
-                  borderBottom: `1px solid ${COLORS.border}`,
-                  transition: "background 0.15s ease",
-                }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.background = "#102742")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.background = "transparent")
-                }
-              >
-                <td style={{ padding: "12px" }}>
-                  {product.images && product.images[0] ? (
-                    <img
-                      src={product.images[0]}
-                      alt=""
-                      style={{
-                        width: "50px",
-                        height: "50px",
-                        objectFit: "contain",
-                        borderRadius: "8px",
-                        background: "#fff",
-                      }}
-                    />
-                  ) : (
-                    <span style={{ color: COLORS.muted }}>—</span>
-                  )}
-                </td>
-                <td style={{ padding: "12px", fontWeight: "600" }}>
-                  {product.name}
-                </td>
-                <td style={{ padding: "12px", color: COLORS.muted }}>
-                  {product.category}
-                </td>
+            {filteredProducts.length === 0 ? (
+              <tr>
                 <td
+                  colSpan="7"
                   style={{
-                    padding: "12px",
-                    color: COLORS.cyan,
-                    fontWeight: "600",
+                    padding: "40px",
+                    textAlign: "center",
+                    color: COLORS.muted,
                   }}
                 >
-                  {product.isCustom ? "Call for Price" : `Rs ${product.price}`}
+                  No products found in this category.
                 </td>
-                <td style={{ padding: "12px" }}>{product.stock}</td>
-                <td style={{ padding: "12px" }}>
-                  {product.isCustom ? (
+              </tr>
+            ) : (
+              filteredProducts.map((product) => (
+                <tr key={product._id} className="prod-table-row">
+                  <td style={{ padding: "12px" }}>
+                    {product.images?.[0] ? (
+                      <img
+                        src={product.images[0]}
+                        alt=""
+                        style={{
+                          width: "52px",
+                          height: "52px",
+                          objectFit: "contain",
+                          borderRadius: "8px",
+                          background: "#fff",
+                          border: `1px solid ${COLORS.border}`,
+                        }}
+                      />
+                    ) : (
+                      <div
+                        style={{
+                          width: "52px",
+                          height: "52px",
+                          borderRadius: "8px",
+                          background: COLORS.inputBg,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          color: COLORS.muted,
+                          fontSize: "20px",
+                        }}
+                      >
+                        🎨
+                      </div>
+                    )}
+                  </td>
+                  <td
+                    style={{
+                      padding: "12px",
+                      fontWeight: "600",
+                      maxWidth: "180px",
+                    }}
+                  >
+                    <div style={{ color: COLORS.text }}>{product.name}</div>
+                    {product.size && (
+                      <div
+                        style={{
+                          color: COLORS.muted,
+                          fontSize: "12px",
+                          marginTop: "2px",
+                        }}
+                      >
+                        📐 {product.size}
+                      </div>
+                    )}
+                    {product.finish && (
+                      <div style={{ color: COLORS.muted, fontSize: "12px" }}>
+                        ✨ {product.finish}
+                      </div>
+                    )}
+                  </td>
+                  <td style={{ padding: "12px" }}>
                     <span
                       style={{
-                        background: `${COLORS.cyan}22`,
+                        background: `${COLORS.cyan}15`,
                         color: COLORS.cyan,
                         padding: "4px 10px",
                         borderRadius: "20px",
                         fontSize: "12px",
-                        fontWeight: "700",
+                        fontWeight: "600",
+                        border: `1px solid ${COLORS.cyan}33`,
                       }}
                     >
-                      ✅ Yes
+                      {product.category}
                     </span>
-                  ) : (
-                    <span style={{ color: COLORS.muted }}>—</span>
-                  )}
-                </td>
-                <td style={{ padding: "12px" }}>
-                  <button
-                    onClick={() => handleEdit(product)}
+                  </td>
+                  <td
                     style={{
-                      background: "transparent",
+                      padding: "12px",
                       color: COLORS.cyan,
-                      padding: "6px 14px",
-                      border: `1px solid ${COLORS.cyan}`,
-                      borderRadius: "6px",
-                      cursor: "pointer",
-                      marginRight: "8px",
-                      fontWeight: "600",
-                      fontSize: "13px",
+                      fontWeight: "700",
+                      fontSize: "15px",
                     }}
                   >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(product._id)}
-                    style={{
-                      background: COLORS.red,
-                      color: "white",
-                      padding: "6px 14px",
-                      border: "none",
-                      borderRadius: "6px",
-                      cursor: "pointer",
-                      fontWeight: "600",
-                      fontSize: "13px",
-                      boxShadow: `0 0 10px ${COLORS.red}44`,
-                    }}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
+                    {product.isCustom ? (
+                      <span style={{ color: COLORS.muted, fontSize: "13px" }}>
+                        Call for Price
+                      </span>
+                    ) : (
+                      `Rs. ${product.price?.toLocaleString()}`
+                    )}
+                  </td>
+                  <td style={{ padding: "12px" }}>
+                    <span
+                      style={{
+                        color: product.stock > 0 ? COLORS.green : COLORS.red,
+                        fontWeight: "600",
+                        fontSize: "14px",
+                      }}
+                    >
+                      {product.stock > 0 ? product.stock : "Out"}
+                    </span>
+                  </td>
+                  <td style={{ padding: "12px" }}>
+                    {product.isCustom ? (
+                      <span
+                        style={{
+                          background: `${COLORS.cyan}22`,
+                          color: COLORS.cyan,
+                          padding: "4px 10px",
+                          borderRadius: "20px",
+                          fontSize: "12px",
+                          fontWeight: "700",
+                        }}
+                      >
+                        Yes
+                      </span>
+                    ) : (
+                      <span style={{ color: COLORS.muted }}>—</span>
+                    )}
+                  </td>
+                  <td style={{ padding: "12px" }}>
+                    <div style={{ display: "flex", gap: "8px" }}>
+                      <button
+                        onClick={() => handleEdit(product)}
+                        style={{
+                          background: `${COLORS.yellow}22`,
+                          color: COLORS.yellow,
+                          padding: "7px 14px",
+                          border: `1px solid ${COLORS.yellow}44`,
+                          borderRadius: "7px",
+                          cursor: "pointer",
+                          fontWeight: "600",
+                          fontSize: "13px",
+                          fontFamily: "inherit",
+                        }}
+                      >
+                        ✏ Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(product._id)}
+                        style={{
+                          background: `${COLORS.red}22`,
+                          color: COLORS.red,
+                          padding: "7px 14px",
+                          border: `1px solid ${COLORS.red}44`,
+                          borderRadius: "7px",
+                          cursor: "pointer",
+                          fontWeight: "600",
+                          fontSize: "13px",
+                          fontFamily: "inherit",
+                        }}
+                      >
+                        🗑 Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
 
-      {/* ===== MOBILE: Product Cards ===== */}
-      <div className="mobile-cards" style={{ marginTop: "20px" }}>
-        {products.map((product) => (
-          <div key={product._id} className="product-card">
-            {product.images && product.images[0] ? (
-              <img
-                className="product-card-thumb"
-                src={product.images[0]}
-                alt=""
-              />
-            ) : (
-              <div
-                className="product-card-thumb"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: COLORS.muted,
-                  fontSize: "12px",
-                  background: COLORS.inputBg,
-                }}
-              >
-                No img
-              </div>
-            )}
-
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "flex-start",
-                  gap: "8px",
-                }}
-              >
+      {/* MOBILE Cards */}
+      <div className="mobile-cards" style={{ marginTop: "4px" }}>
+        {filteredProducts.length === 0 ? (
+          <p
+            style={{
+              textAlign: "center",
+              color: COLORS.muted,
+              padding: "40px 0",
+            }}
+          >
+            No products found in this category.
+          </p>
+        ) : (
+          filteredProducts.map((product) => (
+            <div key={product._id} className="product-card">
+              {product.images?.[0] ? (
+                <img
+                  className="product-card-thumb"
+                  src={product.images[0]}
+                  alt=""
+                />
+              ) : (
+                <div
+                  className="product-card-thumb"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: COLORS.muted,
+                    fontSize: "24px",
+                    background: COLORS.inputBg,
+                  }}
+                >
+                  🎨
+                </div>
+              )}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "flex-start",
+                    gap: "8px",
+                  }}
+                >
+                  <p style={{ margin: 0, fontWeight: 700, fontSize: "15px" }}>
+                    {product.name}
+                  </p>
+                  {product.isCustom && (
+                    <span
+                      style={{
+                        background: `${COLORS.cyan}22`,
+                        color: COLORS.cyan,
+                        padding: "3px 9px",
+                        borderRadius: "20px",
+                        fontSize: "11px",
+                        fontWeight: "700",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      Custom
+                    </span>
+                  )}
+                </div>
                 <p
                   style={{
-                    margin: 0,
-                    fontWeight: 700,
-                    fontSize: "15px",
-                    color: COLORS.text,
+                    margin: "4px 0 0",
+                    fontSize: "12px",
+                    color: COLORS.cyan,
                   }}
                 >
-                  {product.name}
+                  {product.category}
                 </p>
-                {product.isCustom && (
+                <div style={{ display: "flex", gap: "12px", marginTop: "6px" }}>
                   <span
                     style={{
-                      background: `${COLORS.cyan}22`,
+                      fontSize: "14px",
+                      fontWeight: 700,
                       color: COLORS.cyan,
-                      padding: "3px 9px",
-                      borderRadius: "20px",
-                      fontSize: "11px",
-                      fontWeight: "700",
-                      whiteSpace: "nowrap",
-                      flexShrink: 0,
                     }}
                   >
-                    ✅ Custom
+                    {product.isCustom
+                      ? "Call for Price"
+                      : `Rs. ${product.price?.toLocaleString()}`}
                   </span>
-                )}
-              </div>
-
-              <p
-                style={{
-                  margin: "4px 0 0",
-                  fontSize: "13px",
-                  color: COLORS.muted,
-                }}
-              >
-                {product.category}
-              </p>
-
-              <div style={{ display: "flex", gap: "16px", marginTop: "8px" }}>
-                <span
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: 700,
-                    color: COLORS.cyan,
-                  }}
-                >
-                  {product.isCustom ? "Call for Price" : `Rs ${product.price}`}
-                </span>
-                <span style={{ fontSize: "13px", color: COLORS.muted }}>
-                  Stock: {product.stock}
-                </span>
-              </div>
-
-              <div className="product-card-actions">
-                <button
-                  onClick={() => handleEdit(product)}
-                  style={{
-                    background: "transparent",
-                    color: COLORS.cyan,
-                    padding: "8px 14px",
-                    border: `1px solid ${COLORS.cyan}`,
-                    borderRadius: "6px",
-                    cursor: "pointer",
-                    fontWeight: "600",
-                    fontSize: "13px",
-                  }}
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(product._id)}
-                  style={{
-                    background: COLORS.red,
-                    color: "white",
-                    padding: "8px 14px",
-                    border: "none",
-                    borderRadius: "6px",
-                    cursor: "pointer",
-                    fontWeight: "600",
-                    fontSize: "13px",
-                  }}
-                >
-                  Delete
-                </button>
+                  <span style={{ fontSize: "13px", color: COLORS.muted }}>
+                    Stock: {product.stock}
+                  </span>
+                </div>
+                <div className="product-card-actions">
+                  <button
+                    onClick={() => handleEdit(product)}
+                    style={{
+                      background: `${COLORS.yellow}22`,
+                      color: COLORS.yellow,
+                      padding: "8px",
+                      border: `1px solid ${COLORS.yellow}44`,
+                      borderRadius: "6px",
+                      cursor: "pointer",
+                      fontWeight: "600",
+                      fontSize: "13px",
+                      fontFamily: "inherit",
+                    }}
+                  >
+                    ✏ Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(product._id)}
+                    style={{
+                      background: `${COLORS.red}22`,
+                      color: COLORS.red,
+                      padding: "8px",
+                      border: `1px solid ${COLORS.red}44`,
+                      borderRadius: "6px",
+                      cursor: "pointer",
+                      fontWeight: "600",
+                      fontSize: "13px",
+                      fontFamily: "inherit",
+                    }}
+                  >
+                    🗑 Delete
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
-
-      {products.length === 0 && (
-        <p
-          style={{
-            textAlign: "center",
-            color: COLORS.muted,
-            marginTop: "40px",
-          }}
-        >
-          No products found — Click Add Product!
-        </p>
-      )}
     </div>
   );
 }
