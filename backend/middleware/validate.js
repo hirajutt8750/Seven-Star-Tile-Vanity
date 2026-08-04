@@ -29,14 +29,19 @@ const validateOrder = (req, res, next) => {
 };
 
 const validateProduct = (req, res, next) => {
-  const { name, price, category, description } = req.body;
+  const { name, price, category, description, isCustom } = req.body;
 
   if (!name || name.trim().length < 2) {
     return res.status(400).json({ message: "Product name is required." });
   }
-  if (price === undefined || price === null || isNaN(price) || price < 0) {
-    return res.status(400).json({ message: "Valid price is required." });
+
+  // ✅ Custom product ho to price validate nahi hogi
+  if (isCustom !== true && isCustom !== "true") {
+    if (price === undefined || price === null || isNaN(price) || price < 0) {
+      return res.status(400).json({ message: "Valid price is required." });
+    }
   }
+
   if (!category || category.trim().length < 2) {
     return res.status(400).json({ message: "Category is required." });
   }
