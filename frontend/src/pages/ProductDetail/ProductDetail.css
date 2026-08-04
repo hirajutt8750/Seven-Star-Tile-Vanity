@@ -386,12 +386,13 @@
   }
 
   .detail-images {
-    flex-direction: column-reverse;
+    flex-direction: column;
   }
 
   .detail-thumbnails {
     flex-direction: row;
     overflow-x: auto;
+    padding-bottom: 6px;
   }
 
   .detail-thumb {
@@ -402,6 +403,12 @@
 
   .detail-main-img {
     min-height: 300px;
+    max-height: 380px;
+  }
+
+  .detail-main-img img {
+    max-height: 380px; /* ✅ yeh bhi add karo */
+    object-fit: contain;
   }
 
   .detail-name {
