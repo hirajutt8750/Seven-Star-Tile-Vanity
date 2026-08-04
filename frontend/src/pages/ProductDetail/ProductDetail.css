@@ -400,6 +400,14 @@
 
   .detail-main-img {
     min-height: 300px;
+    max-height: 300px;
+  }
+
+  .detail-main-img img {
+    width: 120%;
+    height: 120%;
+    object-fit: contain;
+    max-height: 300px; /* yeh add karo */
   }
 
   .detail-name {
