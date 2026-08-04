@@ -28,14 +28,8 @@ const getProductById = async (req, res) => {
 
 const createProduct = async (req, res) => {
   try {
-    console.log("REQ BODY:", req.body); // ✅ yeh add karo
-    console.log("REQ FILES:", req.files); // ✅ yeh add karo
-    // ✅ Cloudinary se uploaded images ke URLs nikalo
-    const imageUrls = req.files?.map((file) => file.path) || [];
-
     const product = new Product({
       ...req.body,
-      images: imageUrls, // ✅ images array mein save karo
     });
 
     await product.save();
@@ -63,15 +57,7 @@ const updateProduct = async (req, res) => {
   try {
     const oldProduct = await Product.findById(req.params.id);
 
-    // ✅ Nai images aayi hain to unhe bhi add karo
-    const imageUrls = req.files?.map((file) => file.path) || [];
-
-    const updateData = {
-      ...req.body,
-      ...(imageUrls.length > 0 && { images: imageUrls }), // ✅ sirf tab update karo jab nai images hon
-    };
-
-    const product = await Product.findByIdAndUpdate(req.params.id, updateData, {
+    const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
       returnDocument: "after",
     });
 
