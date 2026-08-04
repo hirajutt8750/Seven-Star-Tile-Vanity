@@ -80,7 +80,7 @@
 .detail-thumb img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
 }
 
 .detail-main-img {
@@ -94,12 +94,14 @@
   align-items: center;
   justify-content: center;
   min-height: 450px;
+  max-height: 500px;
 }
 
 .detail-main-img img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
+  max-height: 500px;
 }
 
 .detail-arrow {
@@ -282,6 +284,7 @@
 .detail-whatsapp-btn:hover {
   background: #1da851;
 }
+
 .detail-back-btn {
   width: 100%;
   padding: 14px;
@@ -299,6 +302,7 @@
   background: #d4af37;
   color: #000;
 }
+
 /* Related Products */
 .related-section {
   max-width: 1200px;
@@ -346,7 +350,7 @@
 .related-img img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   transition: transform 0.3s;
 }
 
@@ -371,7 +375,7 @@
   color: #d4af37;
 }
 
-/* Mobile */
+/* ✅ MOBILE FIX */
 @media (max-width: 768px) {
   .detail-container {
     grid-template-columns: 1fr;
@@ -384,12 +388,13 @@
   }
 
   .detail-images {
-    flex-direction: column-reverse;
+    flex-direction: column;
   }
 
   .detail-thumbnails {
     flex-direction: row;
     overflow-x: auto;
+    padding-bottom: 6px;
   }
 
   .detail-thumb {
@@ -400,6 +405,15 @@
 
   .detail-main-img {
     min-height: 300px;
+    max-height: 300px;
+    overflow: hidden;
+  }
+
+  .detail-main-img img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    object-position: center;
   }
 
   .detail-name {
