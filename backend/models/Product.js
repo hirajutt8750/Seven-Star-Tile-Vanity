@@ -1,5 +1,10 @@
 const mongoose = require("mongoose");
 
+const variantSchema = new mongoose.Schema({
+  size: { type: String, required: true },
+  price: { type: Number, required: true },
+});
+
 const productSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -12,7 +17,8 @@ const productSchema = new mongoose.Schema({
   price: {
     type: Number,
     required: function () {
-      return !this.isCustom; // ✅ Custom product ho to price required nahi
+      return !this.isCustom && this.variants.length === 0;
+      // ✅ Custom ya variants hon to price required nahi
     },
     default: 0,
   },
@@ -39,6 +45,10 @@ const productSchema = new mongoose.Schema({
   isCustom: {
     type: Boolean,
     default: false,
+  },
+  variants: {
+    type: [variantSchema], // ✅ size + price variants
+    default: [],
   },
   createdAt: {
     type: Date,

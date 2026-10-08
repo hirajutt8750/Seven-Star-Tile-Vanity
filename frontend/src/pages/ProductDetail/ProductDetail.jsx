@@ -77,9 +77,7 @@ function ReviewsSection({ productId }) {
       if (res.ok) {
         setSubmitted(true);
         setForm({ name: "", email: "", rating: 0, comment: "" });
-      } else {
-        setError("Something went wrong. Try again.");
-      }
+      } else setError("Something went wrong. Try again.");
     } catch {
       setError("Something went wrong. Try again.");
     } finally {
@@ -90,8 +88,6 @@ function ReviewsSection({ productId }) {
   return (
     <div className="reviews-section">
       <h2 className="reviews-title">Customer Reviews</h2>
-
-      {/* Summary */}
       {reviews.length > 0 && (
         <div className="reviews-summary">
           <span className="reviews-avg">{avgRating}</span>
@@ -103,8 +99,6 @@ function ReviewsSection({ productId }) {
           </div>
         </div>
       )}
-
-      {/* Reviews List */}
       {reviews.length === 0 ? (
         <p className="reviews-empty">No reviews yet. Be the first to review!</p>
       ) : (
@@ -132,11 +126,8 @@ function ReviewsSection({ productId }) {
           ))}
         </div>
       )}
-
-      {/* Form */}
       <div className="review-form">
         <h3 className="review-form-title">Write a Review</h3>
-
         {submitted ? (
           <div className="review-success">
             ✓ Review submitted! It will appear after approval.
@@ -144,7 +135,6 @@ function ReviewsSection({ productId }) {
         ) : (
           <>
             {error && <div className="review-error">⚠ {error}</div>}
-
             <div className="review-form-grid">
               <div className="review-field">
                 <label>Your Name</label>
@@ -165,7 +155,6 @@ function ReviewsSection({ productId }) {
                 />
               </div>
             </div>
-
             <div className="review-field">
               <label>Rating</label>
               <StarRating
@@ -173,7 +162,6 @@ function ReviewsSection({ productId }) {
                 onChange={(v) => setForm({ ...form, rating: v })}
               />
             </div>
-
             <div className="review-field">
               <label>Your Review</label>
               <textarea
@@ -183,7 +171,6 @@ function ReviewsSection({ productId }) {
                 onChange={(e) => setForm({ ...form, comment: e.target.value })}
               />
             </div>
-
             <button
               className="review-submit-btn"
               onClick={handleSubmit}
@@ -205,6 +192,7 @@ function ProductDetail() {
   const [loading, setLoading] = useState(true);
   const [currentImage, setCurrentImage] = useState(0);
   const [added, setAdded] = useState(false);
+  const [selectedVariant, setSelectedVariant] = useState(null); // ✅ selected size
   const { addToCart } = useCart();
 
   useEffect(() => {
@@ -213,6 +201,10 @@ function ProductDetail() {
       .then((res) => res.json())
       .then((data) => {
         setProduct(data);
+        // ✅ pehla variant default select karo
+        if (data.variants && data.variants.length > 0) {
+          setSelectedVariant(data.variants[0]);
+        }
         setLoading(false);
       })
       .catch((err) => {
@@ -222,7 +214,11 @@ function ProductDetail() {
   }, [id]);
 
   const handleAddToCart = () => {
-    addToCart(product);
+    addToCart({
+      ...product,
+      price: selectedVariant ? selectedVariant.price : product.price,
+      size: selectedVariant ? selectedVariant.size : product.size,
+    });
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   };
@@ -233,10 +229,9 @@ function ProductDetail() {
         selectedProduct: {
           name: product.name,
           category: product.category,
-          size: product.size || "",
-          color: product.color || "",
+          size: selectedVariant ? selectedVariant.size : product.size || "",
           finish: product.finish || "",
-          price: product.price,
+          price: selectedVariant ? selectedVariant.price : product.price,
           isCustom: product.isCustom,
           image:
             product.images && product.images.length > 0
@@ -247,23 +242,23 @@ function ProductDetail() {
     });
   };
 
-  if (loading) {
+  if (loading)
     return (
       <div className="detail-page">
         <Navbar />
         <div className="detail-loading">Loading...</div>
       </div>
     );
-  }
-
-  if (!product) {
+  if (!product)
     return (
       <div className="detail-page">
         <Navbar />
         <div className="detail-loading">Product not found!</div>
       </div>
     );
-  }
+
+  const hasVariants = product.variants && product.variants.length > 0;
+  const currentPrice = selectedVariant ? selectedVariant.price : product.price;
 
   return (
     <div className="detail-page">
@@ -304,12 +299,10 @@ function ProductDetail() {
               </div>
             ))}
           </div>
-
           <div className="detail-main-img">
             {product.images?.length > 0 ? (
               <>
                 <img src={product.images[currentImage]} alt={product.name} />
-
                 {product.images.length > 1 && (
                   <>
                     <button
@@ -356,9 +349,12 @@ function ProductDetail() {
 
           <h1 className="detail-name">{product.name}</h1>
 
+          {/* ✅ Price — variant select hone pe change hogi */}
           <div className="detail-price">
             {product.isCustom ? (
               <span className="detail-price-custom">Call for Price</span>
+            ) : hasVariants ? (
+              <span>Rs. {currentPrice?.toLocaleString()}</span>
             ) : (
               <span>Rs. {product.price?.toLocaleString()}</span>
             )}
@@ -366,11 +362,72 @@ function ProductDetail() {
 
           <p className="detail-desc">{product.description}</p>
 
+          {/* ✅ SIZE VARIANTS SELECTOR */}
+          {hasVariants && !product.isCustom && (
+            <div style={{ marginBottom: "20px" }}>
+              <p
+                style={{
+                  color: "#888",
+                  fontSize: "13px",
+                  marginBottom: "10px",
+                  fontWeight: "600",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.5px",
+                }}
+              >
+                📐 Size Chunein:
+              </p>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+                {product.variants.map((variant, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setSelectedVariant(variant)}
+                    style={{
+                      padding: "10px 18px",
+                      borderRadius: "8px",
+                      border:
+                        selectedVariant?.size === variant.size
+                          ? "2px solid #d4af37"
+                          : "1px solid #333",
+                      background:
+                        selectedVariant?.size === variant.size
+                          ? "rgba(212,175,55,0.15)"
+                          : "transparent",
+                      color:
+                        selectedVariant?.size === variant.size
+                          ? "#d4af37"
+                          : "#888",
+                      cursor: "pointer",
+                      fontWeight: "600",
+                      fontSize: "14px",
+                      transition: "all 0.2s",
+                    }}
+                  >
+                    {variant.size}
+                    <span
+                      style={{
+                        display: "block",
+                        fontSize: "12px",
+                        marginTop: "2px",
+                        color:
+                          selectedVariant?.size === variant.size
+                            ? "#d4af37"
+                            : "#666",
+                      }}
+                    >
+                      Rs. {Number(variant.price).toLocaleString()}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="detail-table">
-            {product.size && (
+            {(selectedVariant?.size || product.size) && (
               <div className="detail-table-row">
                 <span>Size</span>
-                <span>{product.size}</span>
+                <span>{selectedVariant?.size || product.size}</span>
               </div>
             )}
             {product.finish && (
@@ -393,9 +450,7 @@ function ProductDetail() {
           <div className="detail-buttons">
             {product.isCustom ? (
               <a
-                href={`https://wa.me/923237429771?text=${encodeURIComponent(
-                  `Hello, I want to place a custom order for ${product.name}`,
-                )}`}
+                href={`https://wa.me/923237429771?text=${encodeURIComponent(`Hello, I want to place a custom order for ${product.name}`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="detail-whatsapp-btn"
@@ -410,13 +465,11 @@ function ProductDetail() {
                 >
                   {added ? "✓ Added to Cart!" : "Add to Cart"}
                 </button>
-
                 <button onClick={handleBuyNow} className="detail-buy-btn">
                   Buy Now
                 </button>
               </>
             )}
-
             <button onClick={() => navigate(-1)} className="detail-back-btn">
               ← Go Back
             </button>
@@ -425,9 +478,7 @@ function ProductDetail() {
       </div>
 
       <RelatedProducts category={product.category} currentId={product._id} />
-
       <ReviewsSection productId={product._id} />
-
       <Footer />
       <WhatsAppButton />
     </div>
@@ -469,7 +520,9 @@ function RelatedProducts({ category, currentId }) {
               <span>
                 {product.isCustom
                   ? "Call for Price"
-                  : `Rs. ${product.price?.toLocaleString()}`}
+                  : product.variants?.length > 0
+                    ? `Rs. ${Math.min(...product.variants.map((v) => v.price)).toLocaleString()}+`
+                    : `Rs. ${product.price?.toLocaleString()}`}
               </span>
             </div>
           </Link>

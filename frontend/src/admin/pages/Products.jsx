@@ -29,6 +29,7 @@ function Products() {
   const [editProduct, setEditProduct] = useState(null);
   const [images, setImages] = useState([]);
   const [uploading, setUploading] = useState(false);
+  const [variants, setVariants] = useState([]); // ✅ variants state
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -39,6 +40,7 @@ function Products() {
     stock: "",
     isCustom: false,
     images: [],
+    variants: [],
   });
 
   useEffect(() => {
@@ -74,6 +76,29 @@ function Products() {
     setUploading(false);
   };
 
+  // ✅ Variant add karo
+  const addVariant = () => {
+    const newVariants = [...variants, { size: "", price: "" }];
+    setVariants(newVariants);
+    setFormData((prev) => ({ ...prev, variants: newVariants }));
+  };
+
+  // ✅ Variant update karo
+  const updateVariant = (index, field, value) => {
+    const newVariants = variants.map((v, i) =>
+      i === index ? { ...v, [field]: value } : v,
+    );
+    setVariants(newVariants);
+    setFormData((prev) => ({ ...prev, variants: newVariants }));
+  };
+
+  // ✅ Variant delete karo
+  const removeVariant = (index) => {
+    const newVariants = variants.filter((_, i) => i !== index);
+    setVariants(newVariants);
+    setFormData((prev) => ({ ...prev, variants: newVariants }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (editProduct) {
@@ -89,6 +114,7 @@ function Products() {
     setShowForm(false);
     setEditProduct(null);
     setImages([]);
+    setVariants([]);
     setFormData({
       name: "",
       description: "",
@@ -99,12 +125,14 @@ function Products() {
       stock: "",
       isCustom: false,
       images: [],
+      variants: [],
     });
   };
 
   const handleEdit = (product) => {
     setEditProduct(product);
     setImages(product.images || []);
+    setVariants(product.variants || []); // ✅ variants load karo
     setFormData({
       name: product.name,
       description: product.description,
@@ -115,6 +143,7 @@ function Products() {
       stock: product.stock,
       isCustom: product.isCustom || false,
       images: product.images || [],
+      variants: product.variants || [],
     });
     setShowForm(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -133,13 +162,11 @@ function Products() {
     setFormData((prev) => ({ ...prev, images: newImages }));
   };
 
-  // Filter products by category
   const filteredProducts =
     filterCategory === "All"
       ? products
       : products.filter((p) => p.category === filterCategory);
 
-  // Get unique categories from products
   const productCategories = [
     "All",
     ...new Set(products.map((p) => p.category).filter(Boolean)),
@@ -172,7 +199,6 @@ function Products() {
       <style>{`
         .desktop-table { display: table; }
         .mobile-cards { display: none; }
-
         .filter-tab {
           padding: 8px 18px;
           border-radius: 20px;
@@ -186,55 +212,17 @@ function Products() {
           font-family: Inter, system-ui, sans-serif;
           white-space: nowrap;
         }
-        .filter-tab:hover {
-          border-color: ${COLORS.cyan};
-          color: ${COLORS.cyan};
-        }
-        .filter-tab.active {
-          background: ${COLORS.cyan}22;
-          border-color: ${COLORS.cyan};
-          color: ${COLORS.cyan};
-        }
-
-        .prod-table-row {
-          border-bottom: 1px solid ${COLORS.border};
-          transition: background 0.15s ease;
-        }
-        .prod-table-row:hover {
-          background: #102742 !important;
-        }
-
-        .product-card {
-          background: ${COLORS.card};
-          border: 1px solid ${COLORS.border};
-          border-radius: 14px;
-          padding: 14px;
-          margin-bottom: 12px;
-          display: flex;
-          gap: 14px;
-        }
-        .product-card-thumb {
-          width: 64px;
-          height: 64px;
-          border-radius: 8px;
-          background: #fff;
-          object-fit: contain;
-          flex-shrink: 0;
-        }
-        .product-card-actions {
-          display: flex;
-          gap: 8px;
-          margin-top: 10px;
-        }
+        .filter-tab:hover { border-color: ${COLORS.cyan}; color: ${COLORS.cyan}; }
+        .filter-tab.active { background: ${COLORS.cyan}22; border-color: ${COLORS.cyan}; color: ${COLORS.cyan}; }
+        .prod-table-row { border-bottom: 1px solid ${COLORS.border}; transition: background 0.15s ease; }
+        .prod-table-row:hover { background: #102742 !important; }
+        .product-card { background: ${COLORS.card}; border: 1px solid ${COLORS.border}; border-radius: 14px; padding: 14px; margin-bottom: 12px; display: flex; gap: 14px; }
+        .product-card-thumb { width: 64px; height: 64px; border-radius: 8px; background: #fff; object-fit: contain; flex-shrink: 0; }
+        .product-card-actions { display: flex; gap: 8px; margin-top: 10px; }
         .product-card-actions button { flex: 1; }
-
         @media (max-width: 768px) {
           .products-page { padding: 16px !important; }
-          .products-header {
-            flex-direction: column !important;
-            align-items: stretch !important;
-            gap: 14px !important;
-          }
+          .products-header { flex-direction: column !important; align-items: stretch !important; gap: 14px !important; }
           .products-header button { width: 100%; }
           .form-grid { grid-template-columns: 1fr !important; }
           .form-action-buttons { flex-direction: column !important; }
@@ -286,7 +274,7 @@ function Products() {
         </button>
       </div>
 
-      {/* Category Filter Tabs */}
+      {/* Filter Tabs */}
       <div
         className="filter-tabs"
         style={{
@@ -366,7 +354,7 @@ function Products() {
                 required
               />
               <input
-                placeholder="Price (leave 0 for custom)"
+                placeholder="Price (variants hon to 0 rakho)"
                 type="number"
                 value={formData.price}
                 onChange={(e) =>
@@ -390,7 +378,7 @@ function Products() {
                 <option value="Custom Order">Custom Order</option>
               </select>
               <input
-                placeholder='Size (32", 36", 48"...)'
+                placeholder="Size (overall, e.g. Custom)"
                 value={formData.size}
                 onChange={(e) =>
                   setFormData({ ...formData, size: e.target.value })
@@ -431,6 +419,107 @@ function Products() {
               }}
             />
 
+            {/* ✅ VARIANTS SECTION */}
+            <div
+              style={{
+                margin: "20px 0",
+                padding: "16px",
+                background: COLORS.inputBg,
+                borderRadius: "10px",
+                border: `1px solid ${COLORS.border}`,
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: "12px",
+                }}
+              >
+                <label
+                  style={{
+                    color: COLORS.cyan,
+                    fontWeight: "700",
+                    fontSize: "13px",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.5px",
+                  }}
+                >
+                  📐 Size Variants (Size + Price)
+                </label>
+                <button
+                  type="button"
+                  onClick={addVariant}
+                  style={{
+                    background: COLORS.cyan,
+                    color: "#04141C",
+                    border: "none",
+                    borderRadius: "6px",
+                    padding: "6px 14px",
+                    cursor: "pointer",
+                    fontWeight: "700",
+                    fontSize: "13px",
+                  }}
+                >
+                  + Add Size
+                </button>
+              </div>
+
+              {variants.length === 0 && (
+                <p style={{ color: COLORS.muted, fontSize: "13px", margin: 0 }}>
+                  Koi variant nahi — upar "Add Size" karo
+                </p>
+              )}
+
+              {variants.map((variant, index) => (
+                <div
+                  key={index}
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr auto",
+                    gap: "10px",
+                    marginBottom: "10px",
+                    alignItems: "center",
+                  }}
+                >
+                  <input
+                    placeholder='Size (e.g. 32", 36")'
+                    value={variant.size}
+                    onChange={(e) =>
+                      updateVariant(index, "size", e.target.value)
+                    }
+                    style={inputStyle}
+                  />
+                  <input
+                    placeholder="Price (e.g. 8000)"
+                    type="number"
+                    value={variant.price}
+                    onChange={(e) =>
+                      updateVariant(index, "price", e.target.value)
+                    }
+                    style={inputStyle}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeVariant(index)}
+                    style={{
+                      background: `${COLORS.red}22`,
+                      color: COLORS.red,
+                      border: `1px solid ${COLORS.red}44`,
+                      borderRadius: "6px",
+                      padding: "8px 12px",
+                      cursor: "pointer",
+                      fontWeight: "700",
+                    }}
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {/* Custom checkbox */}
             <div
               style={{
                 margin: "16px 0",
@@ -469,6 +558,7 @@ function Products() {
               </label>
             </div>
 
+            {/* Images */}
             <div style={{ margin: "16px 0" }}>
               <label
                 style={{
@@ -699,7 +789,7 @@ function Products() {
                     }}
                   >
                     <div style={{ color: COLORS.text }}>{product.name}</div>
-                    {product.size && (
+                    {product.variants?.length > 0 && (
                       <div
                         style={{
                           color: COLORS.muted,
@@ -707,7 +797,7 @@ function Products() {
                           marginTop: "2px",
                         }}
                       >
-                        📐 {product.size}
+                        📐 {product.variants.length} sizes
                       </div>
                     )}
                     {product.finish && (
@@ -742,6 +832,17 @@ function Products() {
                     {product.isCustom ? (
                       <span style={{ color: COLORS.muted, fontSize: "13px" }}>
                         Call for Price
+                      </span>
+                    ) : product.variants?.length > 0 ? (
+                      <span style={{ fontSize: "12px", color: COLORS.cyan }}>
+                        Rs.{" "}
+                        {Math.min(
+                          ...product.variants.map((v) => v.price),
+                        ).toLocaleString()}{" "}
+                        –{" "}
+                        {Math.max(
+                          ...product.variants.map((v) => v.price),
+                        ).toLocaleString()}
                       </span>
                     ) : (
                       `Rs. ${product.price?.toLocaleString()}`
@@ -902,7 +1003,9 @@ function Products() {
                   >
                     {product.isCustom
                       ? "Call for Price"
-                      : `Rs. ${product.price?.toLocaleString()}`}
+                      : product.variants?.length > 0
+                        ? `Rs. ${Math.min(...product.variants.map((v) => v.price)).toLocaleString()}+`
+                        : `Rs. ${product.price?.toLocaleString()}`}
                   </span>
                   <span style={{ fontSize: "13px", color: COLORS.muted }}>
                     Stock: {product.stock}
