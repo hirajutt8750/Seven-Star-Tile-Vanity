@@ -375,7 +375,7 @@ function ProductDetail() {
                   letterSpacing: "0.5px",
                 }}
               >
-                📐 Size Chunein:
+                Select the Size:
               </p>
               <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
                 {product.variants.map((variant, i) => (
