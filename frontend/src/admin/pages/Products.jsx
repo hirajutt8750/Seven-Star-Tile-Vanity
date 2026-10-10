@@ -468,7 +468,7 @@ function Products() {
 
               {variants.length === 0 && (
                 <p style={{ color: COLORS.muted, fontSize: "13px", margin: 0 }}>
-                  Koi variant nahi — upar "Add Size" karo
+                  There is no variant. Add “Size” at the top.
                 </p>
               )}
 
